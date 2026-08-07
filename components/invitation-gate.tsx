@@ -12,21 +12,16 @@ interface InvitationGateProps {
 export function InvitationGate({ open, onClose }: InvitationGateProps) {
   const [opening, setOpening] = useState(false);
   const gateRef = useRef<HTMLDivElement>(null);
-  const closeTimerRef = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
 
-  const clearCloseTimer = useCallback(() => {
-    if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  }, []);
-
   const closeImmediately = useCallback(() => {
-    clearCloseTimer();
     setOpening(false);
     onClose();
-  }, [clearCloseTimer, onClose]);
+  }, [onClose]);
+
+  const completeOpening = useCallback(() => {
+    if (opening) onClose();
+  }, [opening, onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -62,15 +57,8 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
     };
   }, [closeImmediately, open]);
 
-  useEffect(() => clearCloseTimer, [clearCloseTimer]);
-
   const openInvitation = () => {
-    if (opening) return;
-    setOpening(true);
-    closeTimerRef.current = window.setTimeout(() => {
-      closeTimerRef.current = null;
-      onClose();
-    }, reduceMotion ? 80 : 1180);
+    if (!opening) setOpening(true);
   };
 
   return (
@@ -92,6 +80,7 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
             type="button"
             className="envelope"
             onClick={openInvitation}
+            onAnimationComplete={completeOpening}
             aria-label="Open the Japan winter invitation"
             animate={
               opening
@@ -100,14 +89,14 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
                   : { y: 70, scale: 1.04, rotateX: -7, opacity: 0 }
                 : { y: 0, scale: 1, opacity: 1 }
             }
-            transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reduceMotion ? 0.08 : 0.95, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="envelope__paper" aria-hidden="true" />
             <motion.span
               className="envelope__flap"
               aria-hidden="true"
               animate={opening && !reduceMotion ? { rotateX: 176 } : { rotateX: 0 }}
-              transition={{ duration: 0.78, ease: [0.45, 0, 0.15, 1] }}
+              transition={{ duration: reduceMotion ? 0.08 : 0.78, ease: [0.45, 0, 0.15, 1] }}
             />
             <span className="envelope__emboss envelope__emboss--left" aria-hidden="true">
               <Botanical tone="light" />
@@ -126,7 +115,7 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
               className="envelope__seal"
               aria-hidden="true"
               animate={opening && !reduceMotion ? { scale: [1, 1.12, 0], rotate: [0, -4, 12] } : { scale: 1 }}
-              transition={{ duration: 0.65 }}
+              transition={{ duration: reduceMotion ? 0.08 : 0.65 }}
             >
               <WaxSeal />
             </motion.span>
