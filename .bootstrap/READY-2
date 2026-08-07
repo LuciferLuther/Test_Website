@@ -1,0 +1,3 @@
+retry=2
+reason=preserve-workflows-during-bootstrap
+project_sha256=d2ac06316a5f1f3c0d577058f9d5f141dc07defac5a650c118dcf1b8527d6b5c
