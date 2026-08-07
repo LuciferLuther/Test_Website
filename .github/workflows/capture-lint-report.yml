@@ -1,0 +1,63 @@
+name: Capture lint report
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/japan-slowly-vercel
+    paths:
+      - .github/workflows/capture-lint-report.yml
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the project
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Install dependencies and create the lockfile
+        run: npm install
+      - name: Capture ESLint output
+        shell: bash
+        run: |
+          set +e
+          npm run lint > /tmp/lint-output.txt 2>&1
+          echo "$?" > /tmp/lint-exit.txt
+          exit 0
+      - name: Commit the dependency lockfile
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "The dependency lockfile is already current."
+            exit 0
+          fi
+          git commit -m "Lock production dependencies [skip impeccable]"
+          git push
+      - name: Post the lint report to the draft PR
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('/tmp/lint-output.txt', 'utf8').slice(0, 60000);
+            const exitCode = fs.readFileSync('/tmp/lint-exit.txt', 'utf8').trim();
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 1,
+              body: `### Automated ESLint report\n\nExit code: \`${exitCode}\`\n\n\`\`\`text\n${output}\n\`\`\``
+            });
