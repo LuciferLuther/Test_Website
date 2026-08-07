@@ -1,0 +1,114 @@
+/*
+ * Aether CSS integration
+ * ----------------------
+ * The values below were shaped with Aether CSS's Glassmorphism controls.
+ * We intentionally use the broadly supported Glassmorphism mode instead of
+ * its experimental Chromium-only Liquid Glass mode.
+ *
+ * Reference: https://aethercss.lovable.app/
+ * Direction: Silk Veil / Fluid Amber — warm ivory, low contrast, soft depth.
+ */
+
+@layer components {
+  :root {
+    --aether-glass-blur: 22px;
+    --aether-glass-saturation: 142%;
+    --aether-glass-bg: rgba(251, 247, 239, 0.76);
+    --aether-glass-bg-strong: rgba(251, 247, 239, 0.9);
+    --aether-glass-border: rgba(255, 255, 255, 0.66);
+    --aether-glass-edge: rgba(88, 52, 42, 0.12);
+    --aether-glass-shadow:
+      0 22px 60px rgba(60, 34, 31, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      inset 0 -1px 0 rgba(89, 53, 43, 0.05);
+    --aether-glass-wine-bg: rgba(78, 22, 39, 0.74);
+    --aether-glass-wine-border: rgba(255, 239, 215, 0.18);
+    --aether-glass-wine-shadow:
+      0 26px 72px rgba(27, 5, 14, 0.3),
+      inset 0 1px 0 rgba(255, 241, 218, 0.14);
+  }
+
+  .aether-glass {
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.08) 48%, rgba(189, 147, 87, 0.05)),
+      var(--aether-glass-bg);
+    border-color: var(--aether-glass-edge);
+    box-shadow: var(--aether-glass-shadow);
+    -webkit-backdrop-filter: blur(var(--aether-glass-blur)) saturate(var(--aether-glass-saturation));
+    backdrop-filter: blur(var(--aether-glass-blur)) saturate(var(--aether-glass-saturation));
+  }
+
+  .aether-glass--header {
+    border: 0;
+    border-bottom: 1px solid var(--aether-glass-edge);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.04)),
+      rgba(249, 244, 236, 0.78);
+    box-shadow: 0 12px 36px rgba(60, 34, 31, 0.1);
+  }
+
+  .aether-glass--dock {
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.1)),
+      var(--aether-glass-bg-strong);
+    border-color: rgba(255, 255, 255, 0.72);
+  }
+
+  .aether-glass--panel {
+    background:
+      radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.72), transparent 24rem),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
+      rgba(248, 242, 233, 0.68);
+  }
+
+  .aether-glass--compact {
+    --aether-glass-blur: 15px;
+    --aether-glass-bg: rgba(251, 247, 239, 0.82);
+    box-shadow:
+      0 14px 34px rgba(55, 43, 36, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .aether-glass--wine {
+    color: #fff8ec;
+    background:
+      radial-gradient(circle at 90% 0%, rgba(226, 194, 140, 0.18), transparent 19rem),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)),
+      var(--aether-glass-wine-bg);
+    border-color: var(--aether-glass-wine-border);
+    box-shadow: var(--aether-glass-wine-shadow);
+  }
+
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .aether-glass {
+      background: var(--paper-bright);
+    }
+
+    .aether-glass--header,
+    .aether-glass--dock,
+    .aether-glass--compact,
+    .aether-glass--panel {
+      background: rgba(251, 247, 239, 0.98);
+    }
+
+    .aether-glass--wine {
+      background: var(--wine-deep);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .aether-glass,
+    .aether-glass--header,
+    .aether-glass--dock,
+    .aether-glass--compact,
+    .aether-glass--panel {
+      background: rgba(251, 247, 239, 0.98);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    .aether-glass--wine {
+      background: var(--wine-deep);
+    }
+  }
+}
