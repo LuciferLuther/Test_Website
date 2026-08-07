@@ -59,12 +59,12 @@ export function HolidayMoments() {
             <p>Snow outside, a good dinner, time together, and a shrine visit when it feels comfortable. No airport. No hotel move. No pressure.</p>
             <ul>
               <li><Icon name="calendar" /> Reserve dinner before holiday hours are announced.</li>
-              <li><Icon name="snow" /> Keep New Year's Day simple and close to the hotel.</li>
+              <li><Icon name="snow" /> Keep New Year’s Day simple and close to the hotel.</li>
               <li><Icon name="sparkle" /> Visit a shrine later or on 2 January for fewer crowds.</li>
             </ul>
             <div className="holiday-story__note">
               <strong>The right expectation</strong>
-              <p>Japan's New Year is more about temples, shrines, food, and a fresh start than one huge national midnight fireworks show.</p>
+              <p>Japan’s New Year is more about temples, shrines, food, and a fresh start than one huge national midnight fireworks show.</p>
             </div>
           </div>
         </Reveal>

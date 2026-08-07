@@ -47,7 +47,7 @@ export function ItineraryBuilder() {
       }),
       "",
       `Christmas Eve: ${christmasCity}`,
-      `New Year's Day: ${newYearCity}`,
+      `New Year’s Day: ${newYearCity}`,
     ].join("\n");
     try {
       await navigator.clipboard.writeText(text);
@@ -150,7 +150,7 @@ export function ItineraryBuilder() {
               </article>
               <article>
                 <span>1 Jan</span>
-                <strong>New Year's Day</strong>
+                <strong>New Year’s Day</strong>
                 <p>{newYearCity}</p>
               </article>
             </div>
@@ -158,7 +158,7 @@ export function ItineraryBuilder() {
               <Icon name={warnings.length ? "sparkle" : "check"} />
               <div>
                 <strong>{warnings.length ? "One thing to fix" : "Holiday timing looks good"}</strong>
-                {warnings.length ? warnings.map((warning) => <p key={warning}>{warning}</p>) : <p>No hotel move on Christmas Eve, Christmas Day, New Year's Eve, or New Year's Day.</p>}
+                {warnings.length ? warnings.map((warning) => <p key={warning}>{warning}</p>) : <p>No hotel move on Christmas Eve, Christmas Day, New Year’s Eve, or New Year’s Day.</p>}
               </div>
             </div>
           </Reveal>

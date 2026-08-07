@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function ErrorPage({
   reset,
 }: Readonly<{
@@ -16,9 +18,9 @@ export default function ErrorPage({
           <button className="button" type="button" onClick={reset}>
             Try again
           </button>
-          <a className="button button--ghost" href="/">
+          <Link className="button button--ghost" href="/">
             Return home
-          </a>
+          </Link>
         </div>
       </div>
     </main>
