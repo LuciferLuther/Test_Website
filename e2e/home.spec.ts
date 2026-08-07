@@ -3,7 +3,13 @@ import { expect, test } from "@playwright/test";
 async function enterExperience(page: import("@playwright/test").Page) {
   await page.goto("/");
   const invitation = page.getByRole("button", { name: "Open the Japan winter invitation" });
-  if (await invitation.isVisible()) await invitation.click();
+  const invitationDialog = page.getByRole("dialog");
+
+  if (await invitation.isVisible()) {
+    await invitation.click();
+    await expect(invitationDialog).toBeHidden({ timeout: 5_000 });
+  }
+
   await expect(page.getByRole("heading", { name: /Japan,/ })).toBeVisible();
 }
 
