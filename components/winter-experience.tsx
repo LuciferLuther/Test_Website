@@ -25,11 +25,15 @@ export function WinterExperience() {
   const active = useActiveSection();
 
   useEffect(() => {
-    try {
-      if (window.sessionStorage.getItem(INTRO_KEY) === "yes") setIntroOpen(false);
-    } catch {
-      // The invitation still works when storage is unavailable.
-    }
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        if (window.sessionStorage.getItem(INTRO_KEY) === "yes") setIntroOpen(false);
+      } catch {
+        // The invitation still works when storage is unavailable.
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   const closeIntro = useCallback(() => {

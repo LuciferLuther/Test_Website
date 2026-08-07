@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useMemo, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cities, routePresets, type City, type CityId } from "@/data/trip";
 import { useTripStore } from "@/store/trip-store";
@@ -46,10 +46,10 @@ function cityMatchesView(city: City, view: ViewId): boolean {
 }
 
 export function RouteMap() {
-  const [view, setView] = useState<ViewId>("all");
-  const hasMounted = useRef(false);
   const selectedCityId = useTripStore((state) => state.selectedCityId);
   const setSelectedCity = useTripStore((state) => state.setSelectedCity);
+  const view = useTripStore((state) => state.mapView);
+  const setView = useTripStore((state) => state.setMapView);
   const savedCityIds = useTripStore((state) => state.savedCityIds);
   const toggleSavedCity = useTripStore((state) => state.toggleSavedCity);
   const routeVisible = useTripStore((state) => state.routeVisible);
@@ -68,22 +68,8 @@ export function RouteMap() {
     [routeCities],
   );
 
-  useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
-    if (selectedCity.region === "Hokkaido") setView("Hokkaido");
-    else if (selectedCity.region === "Kanto") setView("Kanto");
-    else setView("other");
-  }, [selectedCity.id, selectedCity.region]);
-
   const chooseCity = (cityId: CityId) => {
     setSelectedCity(cityId);
-    const city = cities.find((item) => item.id === cityId);
-    if (city?.region === "Hokkaido") setView("Hokkaido");
-    else if (city?.region === "Kanto") setView("Kanto");
-    else if (city) setView("other");
   };
 
   return (

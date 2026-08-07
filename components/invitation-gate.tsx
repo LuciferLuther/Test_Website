@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Botanical, WaxSeal } from "@/components/ui/botanical";
 
@@ -15,13 +15,26 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
   const closeTimerRef = useRef<number | null>(null);
   const reduceMotion = useReducedMotion();
 
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const closeImmediately = useCallback(() => {
+    clearCloseTimer();
+    setOpening(false);
+    onClose();
+  }, [clearCloseTimer, onClose]);
+
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        closeImmediately();
         return;
       }
       if (event.key !== "Tab" || !gateRef.current) return;
@@ -47,18 +60,9 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
       window.removeEventListener("keydown", onKeyDown);
       previous?.focus();
     };
-  }, [open, onClose]);
+  }, [closeImmediately, open]);
 
-  useEffect(() => {
-    if (open) setOpening(false);
-    if (!open && closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-    return () => {
-      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
-    };
-  }, [open]);
+  useEffect(() => clearCloseTimer, [clearCloseTimer]);
 
   const openInvitation = () => {
     if (opening) return;
@@ -70,7 +74,7 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
   };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={() => setOpening(false)}>
       {open ? (
         <motion.div
           ref={gateRef}
@@ -127,7 +131,7 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
               <WaxSeal />
             </motion.span>
           </motion.button>
-          <button className="invitation-gate__skip" type="button" onClick={onClose}>
+          <button className="invitation-gate__skip" type="button" onClick={closeImmediately}>
             Skip opening
           </button>
         </motion.div>

@@ -9,6 +9,15 @@ const validCityIds = new Set<CityId>(cities.map((city) => city.id));
 const validTaskIds = new Set<string>(bookingTasks.map((task) => task.id));
 const validAirportPlans = new Set(["open-jaw", "tokyo-return"] as const);
 
+export type MapViewId = "all" | "Hokkaido" | "Kanto" | "other";
+
+function mapViewForCity(cityId: CityId): MapViewId {
+  const city = cities.find((item) => item.id === cityId);
+  if (city?.region === "Hokkaido") return "Hokkaido";
+  if (city?.region === "Kanto") return "Kanto";
+  return "other";
+}
+
 function isDateString(value: unknown): value is string {
   return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
@@ -17,6 +26,7 @@ interface TripState {
   presetId: RoutePresetId;
   startDate: string;
   selectedCityId: CityId;
+  mapView: MapViewId;
   dayCityId: "tokyo" | "hakodate" | "sapporo";
   sortBy: ScoreKey;
   savedCityIds: CityId[];
@@ -26,6 +36,7 @@ interface TripState {
   setPreset: (presetId: RoutePresetId) => void;
   setStartDate: (startDate: string) => void;
   setSelectedCity: (cityId: CityId) => void;
+  setMapView: (view: MapViewId) => void;
   setDayCity: (cityId: "tokyo" | "hakodate" | "sapporo") => void;
   setSortBy: (sortBy: ScoreKey) => void;
   toggleSavedCity: (cityId: CityId) => void;
@@ -41,6 +52,7 @@ export const useTripStore = create<TripState>()(
       presetId: "balanced",
       startDate: "2026-12-15",
       selectedCityId: "hakodate",
+      mapView: "all",
       dayCityId: "tokyo",
       sortBy: "overall",
       savedCityIds: [],
@@ -49,7 +61,8 @@ export const useTripStore = create<TripState>()(
       airportPlan: "open-jaw",
       setPreset: (presetId) => set({ presetId }),
       setStartDate: (startDate) => set({ startDate }),
-      setSelectedCity: (selectedCityId) => set({ selectedCityId }),
+      setSelectedCity: (selectedCityId) => set({ selectedCityId, mapView: mapViewForCity(selectedCityId) }),
+      setMapView: (mapView) => set({ mapView }),
       setDayCity: (dayCityId) => set({ dayCityId }),
       setSortBy: (sortBy) => set({ sortBy }),
       toggleSavedCity: (cityId) =>

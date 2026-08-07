@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cities, dayPlans, type CoreCityId } from "@/data/trip";
 import { useTripStore } from "@/store/trip-store";
@@ -19,7 +19,10 @@ export function DayPlans() {
   const plans = dayPlans[dayCityId];
   const city = cities.find((item) => item.id === dayCityId)!;
 
-  useEffect(() => setOpenDay(0), [dayCityId]);
+  const chooseDayCity = (cityId: CoreCityId) => {
+    setDayCity(cityId);
+    setOpenDay(0);
+  };
 
   return (
     <section className="section section--soft days-section" id="days">
@@ -38,7 +41,7 @@ export function DayPlans() {
                 type="button"
                 aria-pressed={dayCityId === cityId}
                 className={dayCityId === cityId ? "is-active" : ""}
-                onClick={() => setDayCity(cityId)}
+                onClick={() => chooseDayCity(cityId)}
               >
                 <span>0{index + 1}</span>
                 <strong>{tabCity.name}</strong>
