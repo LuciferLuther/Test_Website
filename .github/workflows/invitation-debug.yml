@@ -1,0 +1,32 @@
+name: Invitation diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/japan-slowly-vercel
+    paths:
+      - e2e/invitation-debug.spec.ts
+      - .github/workflows/invitation-debug.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the project
+        uses: actions/checkout@v5
+      - name: Use Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run invitation diagnostics
+        run: npx playwright test e2e/invitation-debug.spec.ts --project=desktop-chromium --retries=0
