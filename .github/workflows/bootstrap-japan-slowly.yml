@@ -1,0 +1,51 @@
+name: Bootstrap Japan Slowly
+
+on:
+  push:
+    branches:
+      - agent/japan-slowly-vercel
+    paths:
+      - .bootstrap/READY
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bootstrap-japan-slowly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  extract-project:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the development branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild the project archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .bootstrap/project.tar.gz.b64.part-* | base64 --decode > /tmp/japan-slowly-project.tar.gz
+          echo "d2ac06316a5f1f3c0d577058f9d5f141dc07defac5a650c118dcf1b8527d6b5c  /tmp/japan-slowly-project.tar.gz" | sha256sum --check --strict
+          tar -tzf /tmp/japan-slowly-project.tar.gz > /dev/null
+
+      - name: Replace the placeholder repository with the production project
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .bootstrap -exec rm -rf {} +
+          tar -xzf /tmp/japan-slowly-project.tar.gz -C .
+          rm -rf .bootstrap
+
+      - name: Commit the production source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Start Japan Slowly production development [skip bootstrap]"
+          git push
