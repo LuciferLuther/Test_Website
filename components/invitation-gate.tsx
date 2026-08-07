@@ -9,7 +9,10 @@ interface InvitationGateProps {
   onClose: () => void;
 }
 
-const subscribeToHydration = () => () => undefined;
+const subscribeToHydration = (onStoreChange: () => void) => {
+  const timeout = window.setTimeout(onStoreChange, 0);
+  return () => window.clearTimeout(timeout);
+};
 
 function InvitationPlaceholder() {
   return (
