@@ -25,6 +25,7 @@ export function WinterExperience() {
   const active = useActiveSection();
 
   useEffect(() => {
+    document.documentElement.dataset.appHydrated = "true";
     const frame = window.requestAnimationFrame(() => {
       try {
         if (window.sessionStorage.getItem(INTRO_KEY) === "yes") setIntroOpen(false);
@@ -33,7 +34,10 @@ export function WinterExperience() {
       }
     });
 
-    return () => window.cancelAnimationFrame(frame);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      delete document.documentElement.dataset.appHydrated;
+    };
   }, []);
 
   const closeIntro = useCallback(() => {

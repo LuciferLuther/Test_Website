@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 import "./aether.css";
+import "./invitation-native.css";
 
 const display = Cormorant_Garamond({
   variable: "--font-display",

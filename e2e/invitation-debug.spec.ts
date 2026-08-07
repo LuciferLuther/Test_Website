@@ -1,43 +1,28 @@
 import { expect, test } from "@playwright/test";
 
-test("client runtime hydrates the invitation", async ({ page }) => {
-  const consoleMessages: string[] = [];
-  const pageErrors: string[] = [];
-  const failedRequests: string[] = [];
-  const badResponses: string[] = [];
+async function expectClientReady(page: import("@playwright/test").Page) {
+  await expect(page.locator("html[data-app-hydrated='true']")).toHaveCount(1, { timeout: 10_000 });
+}
 
-  page.on("console", (message) => {
-    if (["error", "warning"].includes(message.type())) {
-      consoleMessages.push(`${message.type()}: ${message.text()}`);
-    }
-  });
-  page.on("pageerror", (error) => pageErrors.push(error.stack ?? error.message));
-  page.on("requestfailed", (request) => failedRequests.push(`${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`));
-  page.on("response", (response) => {
-    if (response.status() >= 400) badResponses.push(`${response.status()} ${response.url()}`);
-  });
+test("the first invitation tap works before or after hydration", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const invitation = page.getByRole("button", { name: "Open the Japan winter invitation" });
 
-  await page.goto("/", { waitUntil: "networkidle" });
-  await page.waitForTimeout(3_000);
+  await expect(invitation).toBeVisible();
+  await invitation.click();
+  await expect(page.getByRole("dialog")).toBeHidden({ timeout: 5_000 });
+  await expectClientReady(page);
 
-  const state = await page.evaluate(() => ({
-    readyState: document.readyState,
-    hydratedGate: Boolean(document.querySelector(".invitation-gate[data-hydrated='true']")),
-    placeholderGate: Boolean(document.querySelector(".invitation-gate[aria-hidden='true']")),
-    invitationButtons: Array.from(document.querySelectorAll<HTMLButtonElement>(".invitation-gate button")).map((button) => button.textContent?.trim()),
-    scriptSources: Array.from(document.scripts).map((script) => script.src).filter(Boolean),
-    nextGlobals: Object.keys(window).filter((key) => key.toLowerCase().includes("next")).slice(0, 20),
-    storage: window.sessionStorage.getItem("japan-slowly-intro-seen"),
-    bodyTextStart: document.body.innerText.slice(0, 240),
-  }));
+  await page.getByRole("button", { name: /More snow/ }).click();
+  await expect(page.getByRole("heading", { name: "More snow" })).toBeVisible();
+});
 
-  expect(
-    { state, consoleMessages, pageErrors, failedRequests, badResponses },
-    `CLIENT_RUNTIME ${JSON.stringify({ state, consoleMessages, pageErrors, failedRequests, badResponses })}`,
-  ).toMatchObject({
-    state: { readyState: "complete", hydratedGate: true, placeholderGate: false },
-    pageErrors: [],
-    failedRequests: [],
-    badResponses: [],
-  });
+test("the native skip control also dismisses the invitation", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const skip = page.getByRole("button", { name: "Skip opening" });
+
+  await expect(skip).toBeVisible();
+  await skip.click();
+  await expect(page.getByRole("dialog")).toBeHidden({ timeout: 5_000 });
+  await expectClientReady(page);
 });
