@@ -5,7 +5,7 @@ on:
     branches:
       - agent/japan-slowly-vercel
     paths:
-      - .bootstrap/READY
+      - .bootstrap/READY*
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out the development branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -32,12 +32,15 @@ jobs:
           echo "d2ac06316a5f1f3c0d577058f9d5f141dc07defac5a650c118dcf1b8527d6b5c  /tmp/japan-slowly-project.tar.gz" | sha256sum --check --strict
           tar -tzf /tmp/japan-slowly-project.tar.gz > /dev/null
 
-      - name: Replace the placeholder repository with the production project
+      - name: Replace placeholder content with the production project
         shell: bash
         run: |
           set -euo pipefail
-          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .bootstrap -exec rm -rf {} +
-          tar -xzf /tmp/japan-slowly-project.tar.gz -C .
+          rm -rf /tmp/japan-slowly-project
+          mkdir -p /tmp/japan-slowly-project
+          tar -xzf /tmp/japan-slowly-project.tar.gz -C /tmp/japan-slowly-project
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github ! -name .bootstrap -exec rm -rf {} +
+          rsync -a --exclude='.github/' /tmp/japan-slowly-project/ ./
           rm -rf .bootstrap
 
       - name: Commit the production source
