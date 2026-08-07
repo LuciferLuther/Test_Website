@@ -1,0 +1,75 @@
+name: Impeccable design setup
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/japan-slowly-vercel
+    paths:
+      - PRODUCT.md
+      - DESIGN.md
+      - package.json
+      - app/**
+      - components/**
+      - .github/workflows/impeccable.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: impeccable-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-and-audit:
+    if: ${{ !contains(github.event.head_commit.message, '[skip impeccable]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the project
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install Impeccable for Codex
+        shell: bash
+        env:
+          CI: "1"
+          npm_config_yes: "true"
+        run: |
+          npx impeccable install --scope=project --providers=codex || \
+            npx impeccable skills install -y --providers=codex --scope=project
+
+      - name: Run deterministic design audits
+        shell: bash
+        run: |
+          set +e
+          npx impeccable detect app --fast --json > impeccable-app-report.json
+          app_status=$?
+          npx impeccable detect components --fast --json > impeccable-components-report.json
+          components_status=$?
+          echo "Impeccable app detector exit code: $app_status"
+          echo "Impeccable components detector exit code: $components_status"
+          exit 0
+
+      - name: Commit project-local Codex skill files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for path in .agents .codex impeccable-app-report.json impeccable-components-report.json; do
+            if [ -e "$path" ]; then
+              git add -f "$path"
+            fi
+          done
+          if git diff --cached --quiet; then
+            echo "No generated Impeccable files changed."
+            exit 0
+          fi
+          git commit -m "Install Impeccable for Codex [skip impeccable]"
+          git push
