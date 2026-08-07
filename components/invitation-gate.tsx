@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Botanical, WaxSeal } from "@/components/ui/botanical";
 
@@ -9,7 +9,34 @@ interface InvitationGateProps {
   onClose: () => void;
 }
 
+const subscribeToHydration = () => () => undefined;
+
+function InvitationPlaceholder() {
+  return (
+    <div className="invitation-gate" aria-hidden="true">
+      <div className="invitation-gate__glow" />
+      <Botanical className="invitation-gate__branch invitation-gate__branch--left" tone="gold" />
+      <Botanical className="invitation-gate__branch invitation-gate__branch--right" side="right" tone="gold" />
+      <div className="envelope">
+        <span className="envelope__paper" />
+        <span className="envelope__flap" />
+        <span className="envelope__emboss envelope__emboss--left"><Botanical tone="light" /></span>
+        <span className="envelope__emboss envelope__emboss--right"><Botanical side="right" tone="light" /></span>
+        <span className="envelope__copy">
+          <span className="envelope__kicker">A winter journey for two</span>
+          <strong>Japan,<em> slowly.</em></strong>
+          <span className="envelope__date">15 December 2026 — 3 January 2027</span>
+          <span className="envelope__rule" />
+          <span className="envelope__tap">Opening…</span>
+        </span>
+        <span className="envelope__seal"><WaxSeal /></span>
+      </div>
+    </div>
+  );
+}
+
 export function InvitationGate({ open, onClose }: InvitationGateProps) {
+  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const gateRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -18,7 +45,7 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
   }, [onClose]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !hydrated) return;
     const previous = document.activeElement as HTMLElement | null;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -49,7 +76,9 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
       window.removeEventListener("keydown", onKeyDown);
       previous?.focus();
     };
-  }, [closeInvitation, open]);
+  }, [closeInvitation, hydrated, open]);
+
+  if (!hydrated) return open ? <InvitationPlaceholder /> : null;
 
   const gateVariants = {
     visible: { opacity: 1 },
@@ -83,11 +112,13 @@ export function InvitationGate({ open, onClose }: InvitationGateProps) {
     <AnimatePresence>
       {open ? (
         <motion.div
+          key="invitation-gate"
           ref={gateRef}
           className="invitation-gate"
           role="dialog"
           aria-modal="true"
           aria-labelledby="invitation-title"
+          data-hydrated="true"
           initial="visible"
           animate="visible"
           exit="exit"
