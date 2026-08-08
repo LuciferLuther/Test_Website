@@ -17,6 +17,8 @@ import { BookingChecklist } from "@/components/booking-checklist";
 import { OfficialNotes } from "@/components/official-notes";
 import { SiteFooter } from "@/components/site-footer";
 import { useActiveSection } from "@/components/use-active-section";
+import { AetherRuntime } from "@/components/ui/aether-runtime";
+import { CinematicChapters, SlowRhythm } from "@/components/cinematic-chapters";
 
 const INTRO_KEY = "japan-slowly-intro-seen";
 
@@ -25,18 +27,16 @@ export function WinterExperience() {
   const active = useActiveSection();
 
   useEffect(() => {
-    document.documentElement.dataset.appHydrated = "true";
-    const frame = window.requestAnimationFrame(() => {
-      try {
-        if (window.sessionStorage.getItem(INTRO_KEY) === "yes") setIntroOpen(false);
-      } catch {
-        // The invitation still works when storage is unavailable.
+    let frame = 0;
+    try {
+      if (window.sessionStorage.getItem(INTRO_KEY) === "yes") {
+        frame = window.requestAnimationFrame(() => setIntroOpen(false));
       }
-    });
-
+    } catch {
+      // The invitation still works when storage is unavailable.
+    }
     return () => {
-      window.cancelAnimationFrame(frame);
-      delete document.documentElement.dataset.appHydrated;
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -60,19 +60,24 @@ export function WinterExperience() {
 
   return (
     <>
-      <a className="skip-link" href="#journey">Skip to the trip plan</a>
+      <AetherRuntime />
+      <a className="skip-link" href="#journey">
+        Skip to the trip plan
+      </a>
       <InvitationGate open={introOpen} onClose={closeIntro} />
       <SiteHeader active={active} onReplay={replayIntro} />
       <main>
         <Hero />
         <Countdown />
         <JourneyOverview />
+        <CinematicChapters />
+        <HolidayMoments />
+        <SlowRhythm />
         <ItineraryBuilder />
+        <TravelPlan />
         <RouteMap />
         <DayPlans />
-        <HolidayMoments />
         <PlaceExplorer />
-        <TravelPlan />
         <BookingChecklist />
         <OfficialNotes />
       </main>

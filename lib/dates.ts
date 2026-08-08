@@ -4,6 +4,7 @@ const DAY_MS = 86_400_000;
 
 export interface DatedStop {
   cityId: RoutePreset["stops"][number]["cityId"];
+  label: string;
   nights: number;
   note: string;
   checkIn: string;

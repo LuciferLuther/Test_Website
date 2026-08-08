@@ -1,0 +1,76 @@
+name: Impeccable design gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: design-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detector:
+    name: Source design detector
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install project dependencies
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+      - name: Run Impeccable and keep the report
+        id: detector
+        shell: bash
+        run: |
+          set +e
+          npx impeccable detect --json app components > impeccable-report.json
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload design report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: impeccable-design-report
+          path: impeccable-report.json
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Add detector summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Impeccable detector"
+            if [ "${{ steps.detector.outputs.status }}" = "0" ]; then
+              echo "No findings."
+            elif [ "${{ steps.detector.outputs.status }}" = "2" ]; then
+              echo "Findings were recorded in the uploaded JSON report."
+            else
+              echo "The detector command failed. Check the job log."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Enforce design quality
+        shell: bash
+        run: |
+          status="${{ steps.detector.outputs.status }}"
+          if [ "$status" = "0" ]; then
+            exit 0
+          fi
+          cat impeccable-report.json || true
+          if [ "$status" = "2" ]; then
+            echo "Impeccable found design issues. Fix or narrowly document them before merging."
+          else
+            echo "Impeccable could not complete the scan."
+          fi
+          exit 1

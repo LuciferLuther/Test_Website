@@ -5,12 +5,12 @@ import { useRef, type CSSProperties } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Botanical, FloralDivider } from "@/components/ui/botanical";
 import { Icon } from "@/components/ui/icons";
-import { TOKYO_LIGHTS_IMAGE } from "@/data/trip";
 
 const route = [
-  { city: "Tokyo", note: "7 nights" },
-  { city: "Hakodate", note: "5 nights" },
-  { city: "Sapporo", note: "7 nights" },
+  { city: "Tokyo · HND", note: "2 nights" },
+  { city: "Hakone", note: "4 nights" },
+  { city: "Sapporo", note: "9 nights" },
+  { city: "Tokyo · NRT", note: "1 night" },
 ];
 
 export function Hero() {
@@ -27,7 +27,7 @@ export function Hero() {
     <section className="hero" ref={ref} aria-labelledby="hero-title">
       <motion.div className="hero__image" style={{ y: imageY }} aria-hidden="true">
         <Image
-          src={TOKYO_LIGHTS_IMAGE}
+          src="/images/tokyo-lights.webp"
           alt=""
           fill
           priority
@@ -56,21 +56,21 @@ export function Hero() {
       <Botanical className="hero__branch hero__branch--left" tone="light" />
       <Botanical className="hero__branch hero__branch--right" side="right" tone="light" />
       <motion.div className="hero__content" style={{ y: contentY, opacity: contentOpacity }}>
-        <p className="hero__date">15 December 2026 — 3 January 2027</p>
+        <p className="hero__date">Depart 17 December 2026 · Return 3 January 2027</p>
         <FloralDivider dark />
         <h1 id="hero-title">Japan,<em> slowly.</em></h1>
         <p className="hero__lead">
-          A relaxed winter trip for two. Christmas lights, real snow, warm hotels, and a calm New Year.
+          A relaxed winter trip for two. Four nights in Hakone, nine snowy nights in Sapporo, and no pressure to fill every day.
         </p>
         <div className="hero__actions">
           <button className="button button--light" type="button" onClick={() => goTo("plan")}>
-            Build our trip <Icon name="arrow-down" />
+            See our route <Icon name="arrow-down" />
           </button>
           <button className="button button--ghost-light" type="button" onClick={() => goTo("map")}>
             Open the map <Icon name="map" />
           </button>
         </div>
-        <ol className="hero-route" aria-label="Recommended route">
+        <ol className="hero-route aether-surface aether-surface--hero" data-aether="route-summary" aria-label="Recommended route">
           {route.map((stop, index) => (
             <li key={stop.city}>
               <span>0{index + 1}</span>

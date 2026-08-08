@@ -48,9 +48,8 @@ export function PlaceExplorer() {
     <section className="section places-section" id="places">
       <div className="container">
         <SectionHeading
-          eyebrow="Compare places"
-          title="Keep it, swap it, or save it for later."
-          copy="The goal is not to visit every good city. The goal is to choose the places that fit this holiday best."
+          title="Compare places without adding more hotels."
+          copy="Save the places that fit this holiday. Leave the rest for another trip."
         />
         <Reveal className="place-controls">
           <label className="search-field">
@@ -113,7 +112,7 @@ export function PlaceExplorer() {
         {savedCities.length ? (
           <Reveal className="saved-compare">
             <div className="saved-compare__header">
-              <div><p className="eyebrow">Saved places</p><h3>Quick comparison</h3></div>
+              <div><p className="meta-label">Saved places</p><h3>Quick comparison</h3></div>
               <span>{savedCities.length}/4</span>
             </div>
             <div className="saved-compare__table" role="table" aria-label="Saved place comparison">

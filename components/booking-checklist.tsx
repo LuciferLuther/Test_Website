@@ -19,14 +19,13 @@ export function BookingChecklist() {
     <section className="section section--soft booking-section" id="book">
       <div className="container">
         <SectionHeading
-          eyebrow="Booking checklist"
-          title="Book the parts that protect the holiday."
-          copy="Hotels, holiday dinners, and winter transport matter. Most normal sightseeing can stay flexible."
+          title="Book the important parts first."
+          copy="Start with hotels, Christmas dinner, and winter transport. Most normal sightseeing can stay flexible."
         />
         <Reveal className="booking-progress">
           <div><strong>{completedTasks.length}/{bookingTasks.length}</strong><span>ready</span></div>
           <div className="booking-progress__bar" aria-label={`${progress}% of booking tasks complete`}><motion.i animate={{ width: `${progress}%` }} transition={{ duration: reduceMotion ? 0.01 : 0.55 }} /></div>
-          <p>{progress === 100 ? "The important parts are protected." : progress >= 50 ? "The trip is taking shape." : "Start with flights and the three main hotels."}</p>
+          <p>{progress === 100 ? "The important parts are protected." : progress >= 50 ? "The trip is taking shape." : "Start with flights and the four hotel stays."}</p>
           {completedTasks.length ? <button type="button" onClick={resetChecklist}>Reset</button> : null}
         </Reveal>
         <div className="checklist-groups">

@@ -16,7 +16,7 @@ export function MobileDock({ active }: { active: SectionId }) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <nav className="mobile-dock aether-glass aether-glass--dock" data-aether="silk-veil" aria-label="Quick navigation">
+    <nav className="mobile-dock aether-surface aether-surface--nav" data-aether="mobile-navigation" aria-label="Quick navigation">
       {items.map((item) => {
         const isActive = active === item.id || (item.id === "journey" && active === "days");
         return (

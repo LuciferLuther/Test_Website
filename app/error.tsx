@@ -11,7 +11,7 @@ export default function ErrorPage({
   return (
     <main className="system-page">
       <div className="system-page__card">
-        <p className="eyebrow">A small pause</p>
+        <p className="meta-label">A small pause</p>
         <h1>Something did not load.</h1>
         <p>Your saved trip is still on this device. Try the page again.</p>
         <div className="system-page__actions">

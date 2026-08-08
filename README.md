@@ -1,28 +1,66 @@
 # Japan, Slowly
 
-A production Next.js app for a relaxed winter trip through Tokyo, Hakodate, and Sapporo from 15 December 2026 to 3 January 2027.
+A mobile-first Next.js app for a relaxed winter trip through Tokyo, Hakone, and Sapporo from 17 December 2026 to 3 January 2027.
 
-The app is designed for a couple who want fewer hotel changes, a special Christmas, real snow, onsen time, and a calm New Year. It uses the mood of a premium digital invitation: warm paper, an opening envelope, fine botanical details, cinematic scenes, large editorial type, and soft motion.
+The app helps a couple plan fewer hotel changes while protecting the parts that matter most: Christmas, New Year, reliable snow, onsen time, beautiful scenery, and slow days together.
 
-The visual system and interface code are original. No source code or proprietary artwork from the design reference website is included.
+The visual direction is an original interpretation of a premium digital invitation. It uses warm paper, burgundy ink, muted gold, botanical details, winter photography, clear editorial type, and restrained glass surfaces.
 
 ## What is included
 
-- Animated tap-to-open invitation with keyboard and reduced-motion support.
-- Mobile-first interface with a one-hand navigation dock.
-- Full desktop web-app layout for larger screens.
-- Interactive 19-night route builder with four pace options.
-- Warnings when a custom route creates a hotel move on 24, 25, or 31 December, or 1 January.
-- Interactive Japan map with hotel bases, day trips, route lines, flights, train links, and regional zoom.
-- Calm day plans for Tokyo, Hakodate, and Sapporo.
-- Christmas, fireworks, snow, New Year, and onsen guidance.
-- Searchable and sortable city explorer with persistent saved comparisons.
-- Open-jaw and Tokyo-return airport planning.
+- Tap-to-open invitation with keyboard support and reduced-motion support.
+- Mobile-first layout with safe-area handling and one-hand bottom navigation.
+- Larger desktop planning layout without changing the information structure.
+- One fixed 16-night route with clear dates for every stay.
+- A clear warning for the planned 24 December move, with 25 and 31 December and 1 January protected.
+- Interactive Japan map with bases, day trips, train routes, flights, and regional zoom.
+- Relaxed day plans for Tokyo, Hakone, and Sapporo.
+- Clear Christmas, snow, fireworks, New Year, and onsen guidance.
+- Searchable city explorer with saved comparisons.
+- Haneda arrival, domestic winter flights, and a final Narita buffer night.
 - Persistent booking checklist.
-- Original SVG scenes for Hakodate, Otaru, onsen, traditional streets, and torii paths.
-- Metadata, sitemap, robots output, web manifest, dynamic Open Graph image, security headers, Vercel Analytics, and Speed Insights.
-- App-level loading, error, and not-found screens.
-- Unit tests, Playwright browser tests, and GitHub Actions checks.
+- Original SVG scenes and two credited Creative Commons photographs.
+- Vercel metadata, analytics, speed insights, security headers, sitemap, robots, manifest, and Open Graph image.
+- Unit tests, Playwright tests, GitHub Actions, and an Impeccable design gate.
+
+## Design toolchain
+
+### Impeccable
+
+Run the official installer from the project root:
+
+```bash
+npx impeccable install
+```
+
+The same command is available as:
+
+```bash
+npm run design:install
+```
+
+The repository already contains:
+
+- `PRODUCT.md` with the audience, trip goal, language, and product rules;
+- `DESIGN.md` with the visual system, motion rules, mobile strategy, and accessibility rules;
+- `.impeccable/config.json` with the shared detector and hook settings;
+- `.github/workflows/design-quality.yml`, which runs the detector on pull requests and fails when findings remain.
+
+Run the source detector with:
+
+```bash
+npm run design:detect
+```
+
+### Aether CSS
+
+[Aether CSS](https://aethercss.lovable.app/) is used as the generator and reference for the glass material system. The output is adapted into the project rather than loaded from a third-party runtime.
+
+- `app/aether.css` contains the OKLCH palette, interaction states, glass recipes, and solid fallbacks.
+- `components/ui/aether-runtime.tsx` enables supported enhancements and respects reduced motion, reduced transparency, and touch input.
+- `docs/AETHER-EXPORT.md` records the selected Aether recipes and exact values.
+
+Glass is limited to navigation, overlays, and live planning controls. Normal content is not wrapped in decorative glass cards.
 
 ## Stack
 
@@ -31,31 +69,37 @@ The visual system and interface code are original. No source code or proprietary
 - TypeScript
 - Motion for React
 - Zustand with safe persisted state and explicit client hydration
-- Native CSS design system and responsive animations
+- Aether-derived CSS material system with native CSS and OKLCH fallbacks
 - Next Image and Next Font
 - Vercel Web Analytics and Speed Insights
 - Node test runner and Playwright
+- Impeccable CLI and design skill workflow
 
 ## Run locally
 
-Requirements: Node.js 22 or newer and npm.
+Requirements: Node.js 22.18 or newer and npm.
 
 ```bash
 npm install
+npm run design:install
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
+After the Impeccable installer finishes, reload the coding tool so its project-local skill and hooks are visible.
+
 ## Quality commands
 
 ```bash
-npm run test       # route and date rules
-npm run typecheck  # full TypeScript project check
-npm run lint       # Next.js, React, and accessibility rules
-npm run build      # production Next.js build
-npm run test:e2e   # mobile and desktop browser tests
-npm run verify     # unit tests, types, lint, and production build
+npm run test                # route and date rules
+npm run typecheck           # full TypeScript project check
+npm run lint                # Next.js, React, and accessibility rules
+npm run build               # production Next.js build
+npm run test:e2e            # mobile and desktop browser tests
+npm run design:detect       # Impeccable source detector
+npm run verify              # tests, types, lint, and production build
+npm run quality             # verify plus Impeccable
 ```
 
 Install Playwright's Chromium binary before the first end-to-end run:
@@ -64,7 +108,7 @@ Install Playwright's Chromium binary before the first end-to-end run:
 npx playwright install chromium
 ```
 
-See [`VALIDATION.md`](./VALIDATION.md) for the checks completed before delivery and the checks to run after dependency installation.
+See `VALIDATION.md` for the checks completed in the delivery environment and the commands that still need registry access.
 
 ## Deploy to Vercel
 
@@ -73,75 +117,52 @@ See [`VALIDATION.md`](./VALIDATION.md) for the checks completed before delivery 
 1. Create a GitHub repository.
 2. Copy this project into the repository root.
 3. Run `npm install` and commit the generated `package-lock.json`.
-4. Run `npm run verify`.
-5. Push the `main` branch.
-6. In Vercel, choose **Add New → Project**, import the repository, and keep the detected Next.js settings.
-7. Add this environment variable after choosing the final domain:
+4. Run `npm run design:install` and commit the project-local Impeccable files it creates for your coding harness.
+5. Run `npm run quality`.
+6. Push the `main` branch.
+7. In Vercel, choose **Add New → Project**, import the repository, and keep the detected Next.js settings.
+8. Add the final site URL:
 
 ```text
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
-8. Deploy again so canonical URLs, sitemap URLs, robots output, and social metadata use the final domain.
-9. Enable Web Analytics and Speed Insights in the Vercel dashboard.
+9. Deploy again so canonical URLs, sitemap URLs, robots output, and social metadata use the final domain.
+10. Enable Web Analytics and Speed Insights in the Vercel dashboard.
 
 ### Vercel CLI flow
 
 ```bash
 npm install
+npm run design:install
+npm run quality
 npx vercel
 npx vercel --prod
 ```
 
 The app does not require a database, CMS, API key, or server secret.
 
-## How the app is organised
-
-Trip content is kept separate from the interface in `data/trip.ts`:
-
-- `routePresets`: city order, nights, and route choices.
-- `cities`: scores, map positions, labels, and practical notes.
-- `dayPlans`: relaxed daily suggestions.
-- `bookingTasks`: booking checklist content.
-- `officialSources`: event and transport source links.
-
-Planner choices are stored locally through `store/trip-store.ts`. The store waits for client hydration and sanitises old or invalid saved values before using them.
-
-Visual tokens, layout rules, responsive behaviour, and motion live in `app/globals.css`. Large features are split into focused components under `components/`.
-
 ## Project structure
 
 ```text
-app/                  App Router page, metadata, fallbacks, icon, and global CSS
-components/           Main experience sections
-components/ui/        Modal, media renderer, icons, botanical art, and original SVG scenes
-data/                  Typed itinerary and city content
-lib/                   Date, URL, and formatting helpers
-store/                 Persisted Zustand planner state
-tests/                 Unit tests for route and date logic
-e2e/                   Playwright interaction and overflow tests
-.github/workflows/     GitHub Actions quality checks
-Remote media           Two licensed Wikimedia photographs, allowlisted through Next Image
+app/                         App Router pages, metadata, global CSS, and Aether CSS
+components/                  Main planner sections
+components/ui/               Aether runtime, modal, icons, botanical art, and scenes
+data/                        Typed route, city, day-plan, and booking content
+docs/                        Design-tool records and installer notes
+lib/                         Date, URL, and formatting helpers
+store/                       Persisted Zustand planner state
+tests/                       Unit tests for route and date logic
+e2e/                         Playwright interaction and overflow tests
+.github/workflows/           Build checks and Impeccable design gate
+.impeccable/                 Shared Impeccable project configuration
+public/images/               Licensed photographs and local artwork
+PRODUCT.md                   Product truth used by Impeccable
+DESIGN.md                    Visual and interaction system used by Impeccable
 ```
 
-## Images and artwork
+## Content and image accuracy
 
-The project uses two Creative Commons photographs and original project artwork. Exact source links, licences, and modification notes are in [`CREDITS.md`](./CREDITS.md).
+Trip data is kept in `data/trip.ts`. Event information separates confirmed dates from recurring events whose 2026 programme is still pending. Check official event pages again before paying for non-refundable hotels, dinners, or transport.
 
-## Event accuracy
-
-The interface separates confirmed dates from recurring events whose 2026 programme is still pending. Check every official event page again before paying for a non-refundable hotel, dinner, or transport booking.
-
-## Codex, Impeccable, and Aether CSS
-
-The repository is prepared for Codex development through `AGENTS.md`, `PRODUCT.md`, `DESIGN.md`, and [`docs/CODEX_HANDOFF.md`](./docs/CODEX_HANDOFF.md).
-
-Install the project-local design skill from the repository root:
-
-```bash
-npm run design:install
-```
-
-The GitHub workflow runs the requested `npx impeccable install` command on the development branch and falls back to the explicit `skills install` syntax when required by the current release. It also creates an `impeccable-report.json` design audit.
-
-Aether CSS is used as the source for the app's restrained glass layer. The implementation is in `app/aether.css`, with solid browser fallbacks and reduced-transparency support. It is intentionally limited to navigation, countdown, map controls, and overlays.
+Image licences and modification notes are in `CREDITS.md`.

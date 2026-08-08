@@ -5,42 +5,40 @@ const { loadTypeScript } = require("./load-ts.cjs");
 
 const dates = loadTypeScript(path.join(__dirname, "../lib/dates.ts"));
 const trip = loadTypeScript(path.join(__dirname, "../data/trip.ts"));
+const route = trip.routePresets[0];
 
-const balanced = trip.routePresets.find((preset) => preset.id === "balanced");
-const hakone = trip.routePresets.find((preset) => preset.id === "hakone");
-
-test("every route preset stays at nineteen nights", () => {
-  for (const preset of trip.routePresets) {
-    assert.equal(dates.totalNights(preset), 19, preset.name);
-  }
+test("the fixed route stays at sixteen nights", () => {
+  assert.equal(dates.totalNights(route), 16);
+  assert.equal(dates.daysBetween(trip.tripStart, trip.tripEnd), 16);
 });
 
-test("the balanced route protects Christmas and New Year", () => {
-  const stops = dates.buildDatedStops(trip.tripStart, balanced);
+test("the fixed route matches every requested hotel date", () => {
+  const stops = dates.buildDatedStops(trip.tripStart, route);
   assert.deepEqual(
     stops.map(({ cityId, checkIn, checkOut }) => ({ cityId, checkIn, checkOut })),
     [
-      { cityId: "tokyo", checkIn: "2026-12-15", checkOut: "2026-12-22" },
-      { cityId: "hakodate", checkIn: "2026-12-22", checkOut: "2026-12-27" },
-      { cityId: "sapporo", checkIn: "2026-12-27", checkOut: "2027-01-03" },
+      { cityId: "tokyo", checkIn: "2026-12-18", checkOut: "2026-12-20" },
+      { cityId: "hakone", checkIn: "2026-12-20", checkOut: "2026-12-24" },
+      { cityId: "sapporo", checkIn: "2026-12-24", checkOut: "2027-01-02" },
+      { cityId: "tokyo", checkIn: "2027-01-02", checkOut: "2027-01-03" },
     ],
   );
-  assert.deepEqual(dates.transferWarnings(trip.tripStart, balanced), []);
 });
 
-test("the corrected Hakone route keeps holiday transfer days clear", () => {
-  assert.deepEqual(dates.transferWarnings(trip.tripStart, hakone), []);
-  const stops = dates.buildDatedStops(trip.tripStart, hakone);
-  assert.equal(stops.at(-1).checkOut, trip.tripEnd);
-});
-
-test("changing the start date can produce a visible holiday warning", () => {
-  const warnings = dates.transferWarnings("2026-12-17", balanced);
+test("only the planned Christmas Eve transfer is flagged", () => {
+  const warnings = dates.transferWarnings(trip.tripStart, route);
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /Christmas Eve/);
 });
 
+test("Christmas Day and New Year stay free of hotel moves", () => {
+  const checkIns = dates.buildDatedStops(trip.tripStart, route).slice(1).map((stop) => stop.checkIn);
+  assert.equal(checkIns.includes("2026-12-25"), false);
+  assert.equal(checkIns.includes("2026-12-31"), false);
+  assert.equal(checkIns.includes("2027-01-01"), false);
+});
+
 test("date helpers use stable UTC calendar math", () => {
   assert.equal(dates.addDays("2026-12-31", 1), "2027-01-01");
-  assert.equal(dates.daysBetween("2026-12-15", "2027-01-03"), 19);
+  assert.equal(dates.daysBetween(trip.travelStart, trip.tripEnd), 17);
 });

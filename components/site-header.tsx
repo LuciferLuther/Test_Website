@@ -78,8 +78,8 @@ export function SiteHeader({ active, onReplay }: SiteHeaderProps) {
   return (
     <>
       <header
-        data-aether={scrolled ? "silk-veil" : undefined}
-        className={`site-header${scrolled ? " site-header--scrolled aether-glass aether-glass--header" : ""}`}
+        className={`site-header${scrolled ? " site-header--scrolled aether-surface aether-surface--nav" : ""}`}
+        data-aether={scrolled ? "main-navigation" : undefined}
       >
         <button className="brand" type="button" onClick={onReplay} aria-label="Replay the invitation opening">
           <WaxSeal small />
@@ -120,9 +120,9 @@ export function SiteHeader({ active, onReplay }: SiteHeaderProps) {
             initial={reduceMotion ? false : { opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -14 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="eyebrow">Where would you like to go?</p>
+            <p className="meta-label">Where would you like to go?</p>
             {links.map((link, index) => (
               <button key={link.id} type="button" aria-current={active === link.id ? "location" : undefined} onClick={() => goTo(link.id)}>
                 <span>0{index + 1}</span>

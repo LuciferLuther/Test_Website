@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Japan, Slowly",
     short_name: "Japan Slowly",
-    description: "A relaxed winter itinerary for Tokyo, Hakodate, and Sapporo.",
+    description: "A relaxed winter itinerary for Tokyo, Hakone, and Sapporo.",
     start_url: "/",
     scope: "/",
     display: "standalone",

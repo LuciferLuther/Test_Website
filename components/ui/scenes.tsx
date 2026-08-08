@@ -50,7 +50,9 @@ export function HakodateHarbourScene({ className = "" }: { className?: string })
       <g className="scene__firework" fill="none" stroke="#f3cf84" strokeWidth="3" opacity=".9">
         {Array.from({ length: 12 }, (_, i) => {
           const angle = (Math.PI * 2 * i) / 12;
-          return <path key={i} d={`M218 118 L${218 + Math.cos(angle) * 70} ${118 + Math.sin(angle) * 70}`} />;
+          const x = (218 + Math.cos(angle) * 70).toFixed(3);
+          const y = (118 + Math.sin(angle) * 70).toFixed(3);
+          return <path key={i} d={`M218 118 L${x} ${y}`} />;
         })}
       </g>
       <g opacity=".42" filter={`url(#${glowId})`} fill="#e7a768">
