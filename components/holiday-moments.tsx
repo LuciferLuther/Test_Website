@@ -1,71 +1,50 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { HakodateHarbourScene, OnsenSnowScene } from "@/components/ui/scenes";
+import { OnsenSnowScene } from "@/components/ui/scenes";
 import { Icon } from "@/components/ui/icons";
-import { SAPPORO_ODORI_IMAGE } from "@/data/trip";
 
 export function HolidayMoments() {
   const reduceMotion = useReducedMotion();
   return (
     <section className="section holiday-section" id="holidays">
       <div className="container">
-        <SectionHeading
-          eyebrow="The two big moments"
-          title="Christmas feels bright. New Year feels calm."
-          copy="Give each holiday its own mood instead of trying to make both nights feel the same."
-        />
+        <SectionHeading title="Let Christmas glow. Let New Year breathe." copy="You are in Sapporo for both holidays. Keep one good plan each day and leave the rest open." />
       </div>
       <div className="holiday-stories">
         <Reveal className="holiday-story holiday-story--christmas">
-          <div className="holiday-story__media">
-            <HakodateHarbourScene />
-            <div className="holiday-story__number" aria-hidden="true">01</div>
+          <div className="holiday-story__media holiday-story__media--photo">
+            <div className="holiday-story__photo">
+              <Image src="/images/sapporo-odori.webp" alt="Snow in central Sapporo" fill sizes="(max-width: 980px) 100vw, 50vw" style={{ objectFit: "cover" }} />
+            </div>
           </div>
           <div className="holiday-story__body">
-            <p className="eyebrow">24–25 December · Hakodate</p>
-            <h3>Christmas by the harbour.</h3>
-            <p>Warm warehouses, a giant tree, seafood, onsen, and a waterfront that feels special without needing a packed schedule.</p>
+            <p className="meta-label">24–25 December · Sapporo</p>
+            <h3>Christmas in the snow.</h3>
+            <p>Christmas Eve is a travel day. Christmas Day is yours: sleep, eat well, see the lights, and stop before it becomes work.</p>
             <ul>
-              <li><Icon name="sparkle" /> Book one lovely Christmas dinner.</li>
-              <li><Icon name="water" /> Use Yunokawa or a hotel bath for a slow morning.</li>
-              <li><Icon name="snow" /> Keep one weather-flexible sightseeing day.</li>
+              <li><Icon name="plane" /> Use a direct Haneda to New Chitose flight on 24 December.</li>
+              <li><Icon name="calendar" /> Book dinner for 24 or 25 December before the best options fill.</li>
+              <li><Icon name="sparkle" /> The 2026–27 White Illumination dates are officially published.</li>
             </ul>
-            <div className="holiday-story__note">
-              <strong>About fireworks</strong>
-              <p>Hakodate has included Christmas fireworks in recent programmes. Treat them as a strong possibility, not a promise, until the official 2026 schedule is published.</p>
-            </div>
+            <div className="holiday-story__note"><strong>No fireworks promise</strong><p>No official source confirms a Christmas fireworks event for this plan. The snow, lights, dinner, and time together are enough.</p></div>
           </div>
         </Reveal>
-        <Reveal className="holiday-story holiday-story--new-year" delay={0.06}>
-          <div className="holiday-story__media holiday-story__media--photo">
-            <motion.div
-              className="holiday-story__photo"
-              initial={reduceMotion ? false : { scale: 1.08 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Image src={SAPPORO_ODORI_IMAGE} alt="Snowy central Sapporo" fill sizes="100vw" style={{ objectFit: "cover" }} />
-            </motion.div>
-            <div className="holiday-story__number" aria-hidden="true">02</div>
-          </div>
+        <Reveal className="holiday-story holiday-story--new-year">
+          <div className="holiday-story__media"><OnsenSnowScene /></div>
           <div className="holiday-story__body">
-            <p className="eyebrow">31 December–1 January · Sapporo</p>
+            <p className="meta-label">31 December–1 January · Sapporo</p>
             <h3>A warm, quiet New Year.</h3>
-            <p>Snow outside, a good dinner, time together, and a shrine visit when it feels comfortable. No airport. No hotel move. No pressure.</p>
+            <p>Stay close to the hotel. Have a booked dinner, choose a quiet midnight, and start the year without an alarm.</p>
             <ul>
-              <li><Icon name="calendar" /> Reserve dinner before holiday hours are announced.</li>
-              <li><Icon name="snow" /> Keep New Year’s Day simple and close to the hotel.</li>
-              <li><Icon name="sparkle" /> Visit a shrine later or on 2 January for fewer crowds.</li>
+              <li><Icon name="calendar" /> Check holiday hours before you leave the hotel.</li>
+              <li><Icon name="snow" /> Keep New Year&apos;s Day simple and weather-proof.</li>
+              <li><Icon name="sparkle" /> Visit a shrine later, or on 2 January, if crowds feel tiring.</li>
             </ul>
-            <div className="holiday-story__note">
-              <strong>The right expectation</strong>
-              <p>Japan’s New Year is more about temples, shrines, food, and a fresh start than one huge national midnight fireworks show.</p>
-            </div>
+            <div className="holiday-story__note"><strong>The right expectation</strong><p>New Year in Japan is built around food, shrines, temples, and a fresh start—not one national midnight fireworks show.</p></div>
           </div>
         </Reveal>
       </div>
@@ -73,12 +52,9 @@ export function HolidayMoments() {
         <Reveal className="onsen-banner">
           <div className="onsen-banner__scene"><OnsenSnowScene /></div>
           <div className="onsen-banner__body">
-            <p className="eyebrow">What you loved in Hakone</p>
-            <h3>Keep the feeling, not the hotel move.</h3>
-            <p>Jozankei gives you snow, mountains, and onsen from the Sapporo base. It is the cleanest way to bring the Hakone feeling into this trip.</p>
-            <button type="button" className="text-link" onClick={() => document.getElementById("places")?.scrollIntoView({ behavior: "smooth" })}>
-              Compare Hakone and Jozankei <Icon name="arrow-right" />
-            </button>
+            <h3>Private time is part of the route.</h3>
+            <p>Keep whole mornings and nights for baths, sleep, sex, food, and being together. A slow trip needs time when nothing is booked.</p>
+            <button type="button" className="text-link" onClick={() => document.getElementById("days")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" })}>See the slow day plans <Icon name="arrow-right" /></button>
           </div>
         </Reveal>
       </div>

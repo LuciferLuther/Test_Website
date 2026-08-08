@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { cities, routePresets } from "@/data/trip";
+import { cities, routePresets, tripStart } from "@/data/trip";
 import { buildDatedStops, formatShortDate, totalNights } from "@/lib/dates";
 import { useTripStore } from "@/store/trip-store";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -10,11 +10,9 @@ import { CityMedia } from "@/components/ui/city-media";
 import { Icon } from "@/components/ui/icons";
 
 export function JourneyOverview() {
-  const presetId = useTripStore((state) => state.presetId);
-  const startDate = useTripStore((state) => state.startDate);
   const setSelectedCity = useTripStore((state) => state.setSelectedCity);
-  const preset = routePresets.find((item) => item.id === presetId) ?? routePresets[0];
-  const stops = buildDatedStops(startDate, preset);
+  const preset = routePresets[0];
+  const stops = buildDatedStops(tripStart, preset);
   const reduceMotion = useReducedMotion();
 
   const openOnMap = (cityId: (typeof stops)[number]["cityId"]) => {
@@ -26,39 +24,36 @@ export function JourneyOverview() {
     <section className="section section--paper journey" id="journey">
       <div className="container">
         <SectionHeading
-          eyebrow="The simple plan"
-          title={`${preset.stops.length} bases. ${Math.max(0, preset.stops.length - 1)} travel days.`}
-          copy="Stay long enough to feel each place. Use day trips when you want more, instead of moving hotels again."
+          title="Three bases. Sixteen nights."
+          copy="Tokyo is split into a short arrival and a safe final night. Hakone and Sapporo get the time that matters."
         />
         <Reveal className="journey-summary">
           <div><strong>{totalNights(preset)}</strong><span>nights</span></div>
-          <div><strong>{preset.stops.length}</strong><span>hotels</span></div>
-          <div><strong>{Math.max(0, preset.stops.length - 1)}</strong><span>hotel-change days</span></div>
+          <div><strong>4</strong><span>hotel stays</span></div>
+          <div><strong>3</strong><span>base cities</span></div>
           <p>{preset.summary}</p>
         </Reveal>
-        <div className={`journey-cards journey-cards--${stops.length}`}>
+        <div className="journey-cards journey-cards--4">
           {stops.map((stop, index) => {
             const city = cities.find((item) => item.id === stop.cityId)!;
             const nextStop = stops[index + 1];
             const nextCity = nextStop ? cities.find((item) => item.id === nextStop.cityId) : undefined;
-            const travelIcon = nextCity && city.region !== "Hokkaido" && nextCity.region === "Hokkaido" ? "plane" : "train";
+            const travelIcon = nextCity && city.region !== "Hokkaido" && nextCity.region === "Hokkaido" ? "plane" : nextCity && city.region === "Hokkaido" ? "plane" : "train";
             return (
-              <Reveal key={`${stop.cityId}-${index}`} delay={index * 0.08} className="journey-card-wrap">
+              <Reveal key={`${stop.cityId}-${index}`} className="journey-card-wrap">
                 <article className="journey-card">
                   <div className="journey-card__media">
-                    <CityMedia city={city} sizes="(max-width: 720px) 88vw, (max-width: 1100px) 46vw, 30vw" />
+                    <CityMedia city={city} sizes="(max-width: 720px) 88vw, (max-width: 1100px) 46vw, 24vw" />
                     <div className="journey-card__number">0{index + 1}</div>
                     <div className="journey-card__shade" aria-hidden="true" />
                     <p>{formatShortDate(stop.checkIn)} — {formatShortDate(stop.checkOut)}</p>
                   </div>
                   <div className="journey-card__body">
-                    <span className="journey-card__role">{city.role}</span>
+                    <span className="journey-card__role">{stop.label}</span>
                     <h3>{city.name}</h3>
-                    <p>{city.oneLine}</p>
-                    <div className="journey-card__nights"><strong>{stop.nights}</strong><span>nights</span></div>
-                    <button type="button" onClick={() => openOnMap(city.id)}>
-                      See it on the map <Icon name="arrow-right" />
-                    </button>
+                    <p>{stop.note}</p>
+                    <div className="journey-card__nights"><strong>{stop.nights}</strong><span>{stop.nights === 1 ? "night" : "nights"}</span></div>
+                    <button type="button" onClick={() => openOnMap(city.id)}>See it on the map <Icon name="arrow-right" /></button>
                   </div>
                 </article>
                 {index < stops.length - 1 ? (
@@ -67,11 +62,9 @@ export function JourneyOverview() {
                     initial={reduceMotion ? false : { scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.18 + index * 0.08 }}
+                    transition={{ duration: 0.7 }}
                     aria-hidden="true"
-                  >
-                    <Icon name={travelIcon} />
-                  </motion.div>
+                  ><Icon name={travelIcon} /></motion.div>
                 ) : null}
               </Reveal>
             );

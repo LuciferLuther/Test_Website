@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 import "./aether.css";
-import "./invitation-native.css";
 
 const display = Cormorant_Garamond({
   variable: "--font-display",
@@ -30,9 +29,9 @@ export const metadata: Metadata = {
     default: "Japan, Slowly — Winter Trip for Two",
     template: "%s · Japan, Slowly",
   },
-  description: "A mobile-first interactive winter itinerary for Tokyo, Hakodate, and Sapporo, built around Christmas, snow, onsen, and a calm New Year.",
+  description: "A mobile-first winter itinerary for Tokyo, Hakone, and Sapporo, built around snow, onsen, private time, and a calm New Year.",
   applicationName: "Japan, Slowly",
-  keywords: ["Japan winter itinerary", "Tokyo Christmas", "Hakodate Christmas", "Sapporo New Year", "Japan couple trip"],
+  keywords: ["Japan winter itinerary", "Tokyo winter", "Hakone onsen", "Sapporo New Year", "Japan couple trip"],
   authors: [{ name: "Japan, Slowly" }],
   creator: "Japan, Slowly",
   openGraph: {
@@ -41,13 +40,13 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Japan, Slowly",
     title: "Japan, Slowly — A Winter Trip for Two",
-    description: "Three bases, two travel days, real snow, a special Christmas, and a calm New Year.",
+    description: "Tokyo, four nights in Hakone, nine snowy nights in Sapporo, and a calm New Year.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Japan, Slowly winter trip planner" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Japan, Slowly — A Winter Trip for Two",
-    description: "Tokyo, Hakodate, and Sapporo without the hotel race.",
+    description: "Tokyo, Hakone, and Sapporo without the hotel race.",
     images: ["/opengraph-image"],
   },
   alternates: { canonical: siteUrl },
@@ -57,6 +56,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f3eadf" },
     { media: "(prefers-color-scheme: dark)", color: "#4c202d" },

@@ -1,114 +1,302 @@
+/* impeccable-disable radial-spotlight-glow: The bounded pointer highlight is an Aether material response on controls, not a page background glow. */
 /*
  * Aether CSS integration
- * ----------------------
- * The values below were shaped with Aether CSS's Glassmorphism controls.
- * We intentionally use the broadly supported Glassmorphism mode instead of
- * its experimental Chromium-only Liquid Glass mode.
- *
- * Reference: https://aethercss.lovable.app/
- * Direction: Silk Veil / Fluid Amber — warm ivory, low contrast, soft depth.
+ * Generated from Aether's Glassmorphism and OKLCH styleguide approach, then
+ * adapted for Japan, Slowly. The solid state is the baseline; supported
+ * browsers receive the transparent material layer through AetherRuntime.
  */
 
-@layer components {
+@layer base {
   :root {
-    --aether-glass-blur: 22px;
-    --aether-glass-saturation: 142%;
-    --aether-glass-bg: rgba(251, 247, 239, 0.76);
-    --aether-glass-bg-strong: rgba(251, 247, 239, 0.9);
-    --aether-glass-border: rgba(255, 255, 255, 0.66);
-    --aether-glass-edge: rgba(88, 52, 42, 0.12);
-    --aether-glass-shadow:
-      0 22px 60px rgba(60, 34, 31, 0.16),
-      inset 0 1px 0 rgba(255, 255, 255, 0.72),
-      inset 0 -1px 0 rgba(89, 53, 43, 0.05);
-    --aether-glass-wine-bg: rgba(78, 22, 39, 0.74);
-    --aether-glass-wine-border: rgba(255, 239, 215, 0.18);
-    --aether-glass-wine-shadow:
-      0 26px 72px rgba(27, 5, 14, 0.3),
-      inset 0 1px 0 rgba(255, 241, 218, 0.14);
+    --action: #7c263b;
+    --action-hover: #671d31;
+    --action-active: #4b1825;
+    --action-focus: #e2c28c;
+    --action-disabled: #a69b96;
+    --aether-paper-solid: #fbf7ef;
+    --aether-wine-solid: #4b1825;
+    --aether-hero-solid: rgba(42, 21, 24, 0.92);
+    --aether-edge: rgba(255, 255, 255, 0.62);
+    --aether-edge-dark: rgba(255, 244, 225, 0.19);
+    --aether-shadow: 0 20px 54px rgba(66, 39, 30, 0.15);
+    --aether-shadow-dark: 0 28px 78px rgba(20, 5, 10, 0.28);
+    --aether-ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .aether-glass {
+  @supports (color: oklch(50% 0.1 20)) {
+    :root {
+      --paper: oklch(94.661% 0.015905 73.678);
+      --paper-bright: oklch(97.703% 0.011414 84.578);
+      --paper-deep: oklch(89.335% 0.026162 67.483);
+      --ink: oklch(28.045% 0.025388 42.801);
+      --ink-soft: oklch(49.048% 0.023265 49.844);
+      --wine: oklch(40.649% 0.119469 9.537);
+      --wine-deep: oklch(29.37% 0.078208 7.589);
+      --wine-dark: oklch(23.549% 0.053322 2.352);
+      --gold: oklch(68.986% 0.092712 75.07);
+      --gold-light: oklch(82.894% 0.079079 80.342);
+      --sage: oklch(59.731% 0.034179 131.775);
+      --sage-light: oklch(89.243% 0.015428 136.085);
+      --ice: oklch(91.394% 0.011023 167.779);
+      --action: oklch(40.649% 0.119469 9.537);
+      --action-hover: oklch(35.8% 0.112 8.9);
+      --action-active: oklch(29.37% 0.078208 7.589);
+      --action-focus: oklch(82.894% 0.079079 80.342);
+      --action-disabled: oklch(68% 0.012 45);
+      --aether-paper-solid: oklch(97.703% 0.011414 84.578);
+      --aether-wine-solid: oklch(29.37% 0.078208 7.589);
+    }
+  }
+
+  html {
+    scrollbar-color: var(--wine) var(--paper-deep);
+    scrollbar-width: thin;
+  }
+
+  body,
+  input,
+  textarea,
+  select {
+    caret-color: var(--wine);
+  }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--paper-deep); }
+  ::-webkit-scrollbar-thumb { border: 3px solid var(--paper-deep); border-radius: 999px; background: var(--wine); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--action-hover); }
+}
+
+@layer components {
+  .aether-surface {
+    --aether-x: 50%;
+    --aether-y: 22%;
+    --aether-blur: 20px;
+    --aether-saturation: 1.28;
+    --aether-highlight: rgba(255, 255, 255, 0.54);
+    --aether-highlight-soft: rgba(255, 255, 255, 0.1);
+    --aether-background: var(--aether-paper-solid);
+    --aether-border: rgba(255, 255, 255, 0.56);
+    --aether-box-shadow: var(--aether-shadow);
+    isolation: isolate;
+    overflow: hidden;
+    border-color: var(--aether-border);
+    background: var(--aether-background);
+    box-shadow: var(--aether-box-shadow);
+  }
+
+  .aether-surface::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -1px;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
     background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.08) 48%, rgba(189, 147, 87, 0.05)),
-      var(--aether-glass-bg);
-    border-color: var(--aether-glass-edge);
-    box-shadow: var(--aether-glass-shadow);
-    -webkit-backdrop-filter: blur(var(--aether-glass-blur)) saturate(var(--aether-glass-saturation));
-    backdrop-filter: blur(var(--aether-glass-blur)) saturate(var(--aether-glass-saturation));
+      radial-gradient(240px circle at var(--aether-x) var(--aether-y), var(--aether-highlight), transparent 47%),
+      linear-gradient(118deg, transparent 18%, var(--aether-highlight-soft) 44%, transparent 70%);
+    transition: opacity 220ms var(--aether-ease);
   }
 
-  .aether-glass--header {
-    border: 0;
-    border-bottom: 1px solid var(--aether-glass-edge);
+  .aether-surface > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  html[data-aether="glass"] .aether-surface {
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.04)),
-      rgba(249, 244, 236, 0.78);
-    box-shadow: 0 12px 36px rgba(60, 34, 31, 0.1);
+      linear-gradient(145deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.03)),
+      rgba(251, 247, 239, 0.8);
+    -webkit-backdrop-filter: blur(var(--aether-blur)) saturate(var(--aether-saturation));
+    backdrop-filter: blur(var(--aether-blur)) saturate(var(--aether-saturation));
   }
 
-  .aether-glass--dock {
+  html[data-aether="glass"][data-aether-pointer="fine"][data-aether-motion="full"]
+    .aether-surface[data-aether-active="true"]::before {
+    opacity: 0.72;
+  }
+
+  .aether-surface--nav {
+    --aether-blur: 22px;
+    --aether-saturation: 1.35;
+    --aether-box-shadow: 0 15px 46px rgba(58, 35, 27, 0.15);
+    --aether-background: rgba(251, 247, 239, 0.96);
+  }
+
+  html[data-aether="glass"] .aether-surface--nav {
     background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.1)),
-      var(--aether-glass-bg-strong);
-    border-color: rgba(255, 255, 255, 0.72);
+      linear-gradient(112deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.08)),
+      rgba(249, 244, 236, 0.82);
   }
 
-  .aether-glass--panel {
+  .aether-surface--paper {
+    --aether-blur: 18px;
+    --aether-saturation: 1.22;
+    --aether-background: var(--aether-paper-solid);
+    --aether-border: rgba(255, 255, 255, 0.62);
+    --aether-box-shadow: var(--aether-shadow);
+  }
+
+  html[data-aether="glass"] .aether-surface--paper {
     background:
-      radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.72), transparent 24rem),
-      linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
-      rgba(248, 242, 233, 0.68);
+      linear-gradient(150deg, rgba(255, 255, 255, 0.54), rgba(239, 225, 210, 0.28)),
+      rgba(251, 247, 239, 0.79);
   }
 
-  .aether-glass--compact {
-    --aether-glass-blur: 15px;
-    --aether-glass-bg: rgba(251, 247, 239, 0.82);
-    box-shadow:
-      0 14px 34px rgba(55, 43, 36, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  .aether-surface--hero {
+    --aether-blur: 16px;
+    --aether-saturation: 1.18;
+    --aether-background: var(--aether-hero-solid);
+    --aether-border: var(--aether-edge-dark);
+    --aether-box-shadow: 0 18px 56px rgba(16, 4, 8, 0.24);
+    --aether-highlight: rgba(226, 194, 140, 0.22);
+    --aether-highlight-soft: rgba(255, 255, 255, 0.07);
   }
 
-  .aether-glass--wine {
-    color: #fff8ec;
+  html[data-aether="glass"] .aether-surface--hero {
     background:
-      radial-gradient(circle at 90% 0%, rgba(226, 194, 140, 0.18), transparent 19rem),
-      linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)),
-      var(--aether-glass-wine-bg);
-    border-color: var(--aether-glass-wine-border);
-    box-shadow: var(--aether-glass-wine-shadow);
+      linear-gradient(132deg, rgba(255, 255, 255, 0.09), rgba(75, 24, 37, 0.16)),
+      rgba(34, 14, 20, 0.48);
   }
 
-  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-    .aether-glass {
-      background: var(--paper-bright);
+  .aether-surface--micro {
+    --aether-blur: 12px;
+    --aether-saturation: 1.2;
+    --aether-background: rgba(251, 247, 239, 0.97);
+    --aether-box-shadow: 0 12px 30px rgba(55, 43, 36, 0.1);
+    --aether-highlight: rgba(255, 255, 255, 0.4);
+  }
+
+  html[data-aether="glass"] .aether-surface--micro {
+    background: rgba(251, 247, 239, 0.84);
+  }
+
+  .site-header--scrolled.aether-surface {
+    overflow: visible;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .mobile-dock.aether-surface,
+  .countdown.aether-surface,
+  .plan-result.aether-surface,
+  .map-legend.aether-surface,
+  .modal-card.aether-surface,
+  .hero-route.aether-surface {
+    border-style: solid;
+    border-width: 1px;
+  }
+
+  .countdown.aether-surface,
+  .plan-result.aether-surface,
+  .modal-card.aether-surface,
+  .hero-route.aether-surface {
+    position: relative;
+  }
+
+  .hero-route.aether-surface {
+    padding-inline: 10px;
+    border-radius: 18px;
+  }
+
+  .modal-card.aether-surface {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .hero-route.aether-surface li:last-child {
+    border-bottom-color: transparent;
+  }
+
+  .button--wine,
+  .desktop-nav button.is-active,
+  .site-header--scrolled .desktop-nav button.is-active {
+    background-color: var(--action);
+  }
+
+  .button--wine {
+    background-image: linear-gradient(135deg, color-mix(in srgb, var(--action) 88%, white), var(--action-active));
+  }
+
+  button:disabled,
+  button[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.58;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .button:disabled,
+  .button[aria-disabled="true"] {
+    color: var(--ink-soft);
+    background: var(--action-disabled);
+  }
+
+  .button:focus-visible,
+  .desktop-nav button:focus-visible,
+  .mobile-dock button:focus-visible {
+    outline-color: var(--action-focus);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .button--wine:hover { background-image: linear-gradient(135deg, var(--action-hover), var(--action-active)); }
+    .desktop-nav button:hover { background-color: rgba(124, 38, 59, 0.72); }
+  }
+
+  .button--wine:active { background: var(--action-active); }
+
+  @media (pointer: coarse) {
+    button,
+    [role="button"],
+    .desktop-nav button,
+    .map-view-tabs button,
+    .map-route-toggle {
+      min-height: 44px;
+    }
+  }
+
+  @media (hover: none) {
+    .button:hover,
+    .day-city-tabs button:hover,
+    .place-card:hover,
+    .icon-button:hover {
+      transform: none;
     }
 
-    .aether-glass--header,
-    .aether-glass--dock,
-    .aether-glass--compact,
-    .aether-glass--panel {
-      background: rgba(251, 247, 239, 0.98);
-    }
-
-    .aether-glass--wine {
-      background: var(--wine-deep);
-    }
+    .button::before { display: none; }
   }
 
   @media (prefers-reduced-transparency: reduce) {
-    .aether-glass,
-    .aether-glass--header,
-    .aether-glass--dock,
-    .aether-glass--compact,
-    .aether-glass--panel {
-      background: rgba(251, 247, 239, 0.98);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
+    .aether-surface,
+    html[data-aether="glass"] .aether-surface,
+    .site-header--scrolled,
+    .mobile-dock,
+    .countdown,
+    .map-legend,
+    .modal-backdrop {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
     }
 
-    .aether-glass--wine {
-      background: var(--wine-deep);
+    .aether-surface--nav,
+    html[data-aether="glass"] .aether-surface--nav,
+    .aether-surface--paper,
+    html[data-aether="glass"] .aether-surface--paper,
+    .aether-surface--micro,
+    html[data-aether="glass"] .aether-surface--micro {
+      background: var(--aether-paper-solid);
     }
+
+    .aether-surface--hero,
+    html[data-aether="glass"] .aether-surface--hero {
+      background: var(--aether-hero-solid);
+    }
+
+    .modal-backdrop { background: rgba(25, 12, 16, 0.88); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aether-surface::before { display: none; }
   }
 }

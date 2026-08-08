@@ -7,7 +7,6 @@ export function OfficialNotes() {
     <section className="section official-section" id="sources">
       <div className="container">
         <Reveal className="official-intro">
-          <p className="eyebrow">Official checks</p>
           <h2>What to check before paying for an event.</h2>
           <p>Some winter programmes are published late. Use the official page—not a social post—as the final answer.</p>
         </Reveal>

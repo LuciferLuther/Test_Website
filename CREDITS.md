@@ -4,23 +4,23 @@
 
 ### Tokyo illumination
 
-- Delivered from: Wikimedia Commons through `upload.wikimedia.org`
+- Local file: `public/images/tokyo-lights.webp`
 - Original: **Marunouchi Illumination 2022 (52646998543).jpg**
 - Photographer: Dick Thomas Johnson
 - Source: https://commons.wikimedia.org/wiki/File:Marunouchi_Illumination_2022_(52646998543).jpg
 - Licence: Creative Commons Attribution 2.0 Generic
 - Licence text: https://creativecommons.org/licenses/by/2.0/
-- Presentation changes: responsive cropping and a CSS colour treatment in the interface. The source image itself is not redistributed in this repository.
+- Changes in this project: cropped, resized, compressed to WebP, and colour-toned for the interface.
 
 ### Sapporo winter city view
 
-- Delivered from: Wikimedia Commons through `upload.wikimedia.org`
+- Local file: `public/images/sapporo-odori.webp`
 - Original: **Hokkaido Sapporo Odori Park.jpg**
 - Photographer: Nkns
 - Source: https://commons.wikimedia.org/wiki/File:Hokkaido_Sapporo_Odori_Park.jpg
 - Licence: Creative Commons Attribution-ShareAlike 3.0 Unported
 - Licence text: https://creativecommons.org/licenses/by-sa/3.0/
-- Presentation changes: responsive cropping and a CSS colour treatment in the interface. The source image itself is not redistributed in this repository.
+- Changes in this project: cropped, resized, compressed to WebP, and colour-toned for the interface. The modified image remains available under CC BY-SA 3.0.
 
 ## Original project artwork
 

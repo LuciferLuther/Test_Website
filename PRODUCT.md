@@ -1,49 +1,56 @@
-# Japan, Slowly — Product brief
+# Japan, Slowly — Product Context
 
-## What this product is
+## Platform
 
-Japan, Slowly is a mobile-first trip-planning web app for a couple travelling through Japan from 15 December 2026 to 3 January 2027.
+Web. The phone experience is primary. Tablet and desktop expand the same route and actions without changing the journey.
 
-It helps them choose a calm winter route without turning the holiday into a race between hotels. The default recommendation is Tokyo, Hakodate, and Sapporo, with Christmas in Hakodate and New Year in Sapporo.
+## Who this is for
 
-## Who it is for
+A couple travelling to Japan from 17 December 2026 to 3 January 2027. They want snow, winter events, onsen, sex, rest, and time together. Their last multi-city trip felt rushed.
 
-The primary users are a couple returning to Japan after a fast 10-day spring trip. They loved Hakone because it felt quiet, scenic, and relaxing. This winter trip should keep that feeling while adding snow, Christmas lights, fireworks when officially confirmed, onsen, and memorable scenery.
+They will often use this planner together on a phone, then return on a laptop when booking flights and hotels.
 
-## The main job
+## What the product makes possible
 
-Help the couple answer one question:
+The planner turns the fixed Tokyo, Hakone, and Sapporo route into one calm winter holiday. It protects the experiences that matter most: reliable snow, nearby day trips, onsen time, private time, a bright Christmas, and an unhurried New Year.
 
-> What is the happiest, most relaxed winter itinerary we can build without changing hotels all the time?
+## Positioning
 
-## Product principles
+A winter trip planner that protects the feeling of the holiday, not just the list of places.
 
-1. Mobile first. A phone is the main planning device.
-2. Plain English. Every section should make one point quickly.
-3. Fewer bases. Reward five-to-seven-night stays and penalise one-night stops.
-4. Protect the holidays. Avoid hotel moves on 24, 25, and 31 December and 1 January.
-5. Be honest. Clearly separate confirmed event dates from recurring events that still need checking.
-6. Show, then explain. Use the map, timeline, and visual comparisons before long paragraphs.
-7. Keep joy visible. Snow, onsen, lights, food, scenery, and time together matter more than completing a checklist.
+## Primary success
 
-## Core experience
+Within a few minutes, the couple should understand:
 
-- Tap-to-open invitation entrance.
-- Recommended 19-night itinerary with four pace options.
-- Interactive map with bases, day trips, flights, and trains.
-- Day plans that leave room for rest.
-- Christmas and New Year guidance.
-- Snow confidence and onsen options.
-- Searchable destination explorer.
-- Saved-place comparison.
-- Airport and booking checklist tools.
+- the 16-night route and every hotel date;
+- why Tokyo is split between Haneda arrival and a Narita buffer night;
+- how Hakone and Sapporo work as long bases for nearby places;
+- that 24 December is an intentional Hakone-to-Sapporo travel day;
+- where Christmas and New Year happen;
+- which transport and holiday bookings need early action;
+- which event details are confirmed and which still need checking.
 
-## Voice
+## Emotional goal
 
-Warm, clear, calm, and useful.
+The experience should feel warm, intimate, calm, and hopeful. Planning should feel like the first part of the holiday.
 
-Use short sentences. Avoid travel-brochure language, dramatic claims, and dense paragraphs. Never promise snow, fireworks, or opening hours without a reliable source.
+## Durable constraints
 
-## Success looks like
+- Use plain English and one clear idea at a time.
+- Depart on 17 December 2026 and return on 3 January 2027.
+- Keep the hotel plan at 16 nights: Tokyo HND 2, Hakone 4, Sapporo 9, Tokyo NRT 1.
+- The hotel move on 24 December is intentional. Protect 25 and 31 December and 1 January from hotel transfers.
+- Never present recurring events or fireworks as confirmed until an official 2026–27 source confirms them.
+- Keep every core action usable on a 320-pixel-wide phone.
+- Touch targets must be at least 44 by 44 pixels.
+- Do not hide core planning tools on mobile.
+- Respect reduced motion and reduced transparency preferences.
+- The invitation opening is the one expressive entrance. Routine interactions should feel quick.
 
-A user can open the site on a phone and understand the recommended route, holiday plan, and next booking steps in under three minutes. They should feel excited and calmer, not overloaded.
+## Product language
+
+Use these terms consistently: base, nights, hotel move, day trip, Christmas Eve, New Year's Day, snow confidence, save place, booking checklist.
+
+Use direct, adult language when private couple time is part of the plan. Avoid graphic detail.
+
+Avoid travel-industry jargon, exaggerated claims, and poetic copy that hides the practical point.

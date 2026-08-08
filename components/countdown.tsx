@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { countdownParts } from "@/lib/dates";
-import { tripStart } from "@/data/trip";
+import { travelStart } from "@/data/trip";
 
 const labels = ["Days", "Hours", "Minutes", "Seconds"] as const;
 
@@ -12,7 +12,7 @@ export function Countdown() {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const update = () => setParts(countdownParts(tripStart));
+    const update = () => setParts(countdownParts(travelStart));
     update();
     const interval = window.setInterval(update, 1000);
     return () => window.clearInterval(interval);
@@ -21,8 +21,8 @@ export function Countdown() {
   const values = parts ? [parts.days, parts.hours, parts.minutes, parts.seconds] : [null, null, null, null];
 
   return (
-    <section className="countdown aether-glass aether-glass--panel" data-aether="fluid-amber" aria-label="Countdown to the trip">
-      <p className="eyebrow">Our winter starts in</p>
+    <section className="countdown aether-surface aether-surface--paper" data-aether="countdown" aria-label="Countdown to the trip">
+      <p className="meta-label">Our winter starts in</p>
       <div className="countdown__grid">
         {values.map((value, index) => (
           <div className="countdown__item" key={labels[index]}>

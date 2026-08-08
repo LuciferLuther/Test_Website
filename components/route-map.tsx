@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cities, routePresets, type City, type CityId } from "@/data/trip";
 import { useTripStore } from "@/store/trip-store";
@@ -29,8 +29,14 @@ const views = {
 
 type ViewId = keyof typeof views;
 
+function getCityView(city: City): ViewId {
+  if (city.region === "Hokkaido") return "Hokkaido";
+  if (city.region === "Kanto") return "Kanto";
+  return "other";
+}
+
 function getRoutePath(from: City, to: City): { d: string; type: "flight" | "train" } {
-  const hokkaidoJump = from.region !== "Hokkaido" && to.region === "Hokkaido";
+  const hokkaidoJump = (from.region === "Hokkaido") !== (to.region === "Hokkaido");
   if (hokkaidoJump) {
     const midX = (from.map.x + to.map.x) / 2 + 70;
     const midY = Math.min(from.map.y, to.map.y) - 115;
@@ -46,18 +52,17 @@ function cityMatchesView(city: City, view: ViewId): boolean {
 }
 
 export function RouteMap() {
+  const [view, setView] = useState<ViewId>("all");
   const selectedCityId = useTripStore((state) => state.selectedCityId);
+  const previousSelectedCityId = useRef(selectedCityId);
   const setSelectedCity = useTripStore((state) => state.setSelectedCity);
-  const view = useTripStore((state) => state.mapView);
-  const setView = useTripStore((state) => state.setMapView);
   const savedCityIds = useTripStore((state) => state.savedCityIds);
   const toggleSavedCity = useTripStore((state) => state.toggleSavedCity);
   const routeVisible = useTripStore((state) => state.routeVisible);
   const setRouteVisible = useTripStore((state) => state.setRouteVisible);
-  const presetId = useTripStore((state) => state.presetId);
   const reduceMotion = useReducedMotion();
 
-  const preset = routePresets.find((item) => item.id === presetId) ?? routePresets[0];
+  const preset = routePresets[0];
   const selectedCity = cities.find((city) => city.id === selectedCityId) ?? cities[1];
   const routeCities = useMemo(
     () => preset.stops.map((stop) => cities.find((city) => city.id === stop.cityId)!).filter(Boolean),
@@ -68,21 +73,29 @@ export function RouteMap() {
     [routeCities],
   );
 
+  useEffect(() => {
+    if (previousSelectedCityId.current === selectedCityId) return;
+    previousSelectedCityId.current = selectedCityId;
+    const frame = window.requestAnimationFrame(() => setView(getCityView(selectedCity)));
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedCity, selectedCityId]);
+
   const chooseCity = (cityId: CityId) => {
     setSelectedCity(cityId);
+    const city = cities.find((item) => item.id === cityId);
+    if (city) setView(getCityView(city));
   };
 
   return (
     <section className="section map-section" id="map">
       <div className="container">
         <SectionHeading
-          eyebrow="Interactive map"
-          title="See the distance before adding another stop."
-          copy="Hotel bases use large pins. Day trips stay close to the route, so you get more variety without more packing."
+          title="See the route before adding another city."
+          copy="Large pins are hotel bases. Nearby places work better as day trips, so you get more without packing again."
         />
         <div className="map-layout">
-          <Reveal className="map-card aether-glass aether-glass--panel">
-            <div className="map-toolbar" data-aether="silk-veil">
+          <Reveal className="map-card">
+            <div className="map-toolbar">
               <div className="map-view-tabs" role="group" aria-label="Map view">
                 {(["all", "Hokkaido", "Kanto", "other"] as ViewId[]).map((item) => (
                   <button key={item} type="button" className={view === item ? "is-active" : ""} aria-pressed={view === item} onClick={() => setView(item)}>
@@ -102,7 +115,7 @@ export function RouteMap() {
                 </defs>
                 <motion.g
                   animate={views[view]}
-                  transition={{ duration: reduceMotion ? 0.01 : 0.85, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: reduceMotion ? 0.01 : 0.85, ease: [0.16, 1, 0.3, 1] }}
                   style={{ transformOrigin: "380px 370px" }}
                 >
                   <g className="map-land" filter="url(#map-shadow)">
@@ -124,7 +137,7 @@ export function RouteMap() {
                           className={`map-route map-route--${segment.type}`}
                           initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
                           animate={{ pathLength: 1, opacity: 1 }}
-                          transition={{ duration: reduceMotion ? 0.01 : 1.1, delay: index * 0.18, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{ duration: reduceMotion ? 0.01 : 1.1, delay: index * 0.18, ease: [0.16, 1, 0.3, 1] }}
                         />
                       ))}
                     </g>
@@ -160,15 +173,15 @@ export function RouteMap() {
                   </g>
                 </motion.g>
               </svg>
-              <div className="map-legend aether-glass aether-glass--compact" data-aether="silk-veil" aria-label="Map legend">
+              <div className="map-legend aether-surface aether-surface--micro" data-aether="map-legend" aria-label="Map legend">
                 <span><i className="legend-pin" /> Hotel base</span>
                 <span><i className="legend-line legend-line--flight" /> Flight</span>
                 <span><i className="legend-line" /> Train or road</span>
               </div>
             </div>
           </Reveal>
-          <Reveal className="map-detail aether-glass aether-glass--wine" delay={0.08}>
-            <p className="eyebrow">Selected place</p>
+          <Reveal className="map-detail" delay={0.08}>
+            <p className="meta-label">Selected place</p>
             <div className="map-detail__title">
               <div><span>{selectedCity.region}</span><h3>{selectedCity.name}</h3></div>
               <strong>{selectedCity.scores.overall}<small>/100</small></strong>

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import type { City } from "@/data/trip";
 import {
-  HakodateHarbourScene,
   OnsenSnowScene,
   OtaruCanalScene,
   ToriiPathScene,
@@ -28,7 +27,6 @@ export function CityMedia({ city, sizes }: CityMediaProps) {
     );
   }
 
-  if (city.id === "hakodate") return <HakodateHarbourScene />;
   if (city.id === "otaru") return <OtaruCanalScene />;
   if (city.id === "kanazawa") return <TraditionalStreetScene />;
   if (city.id === "kyoto") return <ToriiPathScene />;

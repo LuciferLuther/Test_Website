@@ -61,7 +61,8 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
           }}
         >
           <motion.div
-            className="modal-card"
+            className="modal-card aether-surface aether-surface--paper"
+            data-aether="place-details"
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
@@ -69,10 +70,9 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
             initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}
-            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="modal-card__top">
-              <p className="eyebrow">Place details</p>
               <button className="icon-button" type="button" onClick={onClose} aria-label="Close details">
                 <Icon name="close" />
               </button>
