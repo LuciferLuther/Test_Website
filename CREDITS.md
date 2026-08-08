@@ -26,4 +26,6 @@
 
 The envelope, wax seal, botanical decoration, harbour scene, snowy onsen scene, Otaru canal scene, traditional street scene, torii path scene, route map, icons, and motion design were created specifically for this project.
 
+The cinematic Hakone onsen and Sapporo winter images were generated as original project artwork with OpenAI's built-in image generation tool, then compressed to WebP for the site. They do not reproduce a third-party photograph or the reference site's artwork.
+
 The interface code does not include source code or proprietary artwork from the design reference website.

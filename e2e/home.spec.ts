@@ -2,11 +2,21 @@ import { expect, test } from "@playwright/test";
 
 async function enterExperience(page: import("@playwright/test").Page) {
   await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-aether", /^(glass|solid)$/);
   const invitation = page.getByRole("button", { name: "Open the Japan winter invitation" });
   await expect(invitation).toBeVisible();
   await invitation.click();
+  await expect(page.getByRole("dialog", { name: /Japan,/ })).toBeHidden();
   await expect(page.getByRole("heading", { name: /Japan,/ })).toBeVisible();
 }
+
+test("the invitation can be replayed and skipped", async ({ page }) => {
+  await enterExperience(page);
+  await page.getByRole("button", { name: "Replay the invitation opening" }).click();
+  await expect(page.getByRole("dialog", { name: /Japan,/ })).toBeVisible();
+  await page.getByRole("button", { name: "Skip opening" }).click();
+  await expect(page.getByRole("dialog", { name: /Japan,/ })).toBeHidden();
+});
 
 test("the fixed route is clear and can be copied", async ({ page }) => {
   await enterExperience(page);
@@ -23,8 +33,13 @@ test("the map, day tabs, and saved places are interactive", async ({ page }) => 
   await page.getByRole("button", { name: "Select Tokyo" }).click();
   await expect(page.locator(".map-detail").getByRole("heading", { name: "Tokyo" })).toBeVisible();
   await page.locator("#days").scrollIntoViewIfNeeded();
-  await page.locator(".day-city-tabs").getByRole("button", { name: /Hakone/ }).click();
-  await expect(page.locator(".day-plan-intro").getByRole("heading", { name: "Hakone" })).toBeVisible();
+  await page
+    .locator(".day-city-tabs")
+    .getByRole("button", { name: /Hakone/ })
+    .click();
+  await expect(
+    page.locator(".day-plan-intro").getByRole("heading", { name: "Hakone" }),
+  ).toBeVisible();
   await page.locator("#places").scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "Save Sapporo" }).click();
   await expect(page.getByText("Quick comparison")).toBeVisible();
@@ -40,12 +55,17 @@ test("the booking checklist persists after reload", async ({ page }) => {
   await expect(page.getByText("1/10")).toBeVisible();
 });
 
-test("the mobile layout keeps fixed controls and the map inside the viewport", async ({ page }, testInfo) => {
+test("the mobile layout keeps fixed controls and the map inside the viewport", async ({
+  page,
+}, testInfo) => {
   test.skip(!testInfo.project.name.startsWith("mobile"), "Mobile-only visual guard");
   await enterExperience(page);
   const initial = await page.evaluate(() => {
     const dock = document.querySelector<HTMLElement>(".mobile-dock");
-    return { overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth, dockPosition: dock ? getComputedStyle(dock).position : "missing" };
+    return {
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      dockPosition: dock ? getComputedStyle(dock).position : "missing",
+    };
   });
   expect(initial.overflow).toBeLessThanOrEqual(1);
   expect(initial.dockPosition).toBe("fixed");
@@ -57,7 +77,10 @@ test("the mobile layout keeps fixed controls and the map inside the viewport", a
     if (!card || !stage) return null;
     const cardRect = card.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
-    return { pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth, stageOverflow: stageRect.width - cardRect.width };
+    return {
+      pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      stageOverflow: stageRect.width - cardRect.width,
+    };
   });
   expect(map).not.toBeNull();
   expect(map!.pageOverflow).toBeLessThanOrEqual(1);

@@ -18,6 +18,7 @@ import { OfficialNotes } from "@/components/official-notes";
 import { SiteFooter } from "@/components/site-footer";
 import { useActiveSection } from "@/components/use-active-section";
 import { AetherRuntime } from "@/components/ui/aether-runtime";
+import { CinematicChapters, SlowRhythm } from "@/components/cinematic-chapters";
 
 const INTRO_KEY = "japan-slowly-intro-seen";
 
@@ -60,19 +61,23 @@ export function WinterExperience() {
   return (
     <>
       <AetherRuntime />
-      <a className="skip-link" href="#journey">Skip to the trip plan</a>
+      <a className="skip-link" href="#journey">
+        Skip to the trip plan
+      </a>
       <InvitationGate open={introOpen} onClose={closeIntro} />
       <SiteHeader active={active} onReplay={replayIntro} />
       <main>
         <Hero />
         <Countdown />
         <JourneyOverview />
+        <CinematicChapters />
+        <HolidayMoments />
+        <SlowRhythm />
         <ItineraryBuilder />
+        <TravelPlan />
         <RouteMap />
         <DayPlans />
-        <HolidayMoments />
         <PlaceExplorer />
-        <TravelPlan />
         <BookingChecklist />
         <OfficialNotes />
       </main>

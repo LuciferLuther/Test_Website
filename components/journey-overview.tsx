@@ -25,35 +25,61 @@ export function JourneyOverview() {
       <div className="container">
         <SectionHeading
           title="Three bases. Sixteen nights."
-          copy="Tokyo is split into a short arrival and a safe final night. Hakone and Sapporo get the time that matters."
+          copy="Tokyo gives us a soft arrival and a safe final night. Hakone gives us onsen and privacy. Sapporo gives us Christmas, snow, New Year, and easy day trips."
         />
         <Reveal className="journey-summary">
-          <div><strong>{totalNights(preset)}</strong><span>nights</span></div>
-          <div><strong>4</strong><span>hotel stays</span></div>
-          <div><strong>3</strong><span>base cities</span></div>
+          <div>
+            <strong>{totalNights(preset)}</strong>
+            <span>nights</span>
+          </div>
+          <div>
+            <strong>4</strong>
+            <span>hotel stays</span>
+          </div>
+          <div>
+            <strong>3</strong>
+            <span>base cities</span>
+          </div>
           <p>{preset.summary}</p>
         </Reveal>
         <div className="journey-cards journey-cards--4">
           {stops.map((stop, index) => {
             const city = cities.find((item) => item.id === stop.cityId)!;
             const nextStop = stops[index + 1];
-            const nextCity = nextStop ? cities.find((item) => item.id === nextStop.cityId) : undefined;
-            const travelIcon = nextCity && city.region !== "Hokkaido" && nextCity.region === "Hokkaido" ? "plane" : nextCity && city.region === "Hokkaido" ? "plane" : "train";
+            const nextCity = nextStop
+              ? cities.find((item) => item.id === nextStop.cityId)
+              : undefined;
+            const travelIcon =
+              nextCity && city.region !== "Hokkaido" && nextCity.region === "Hokkaido"
+                ? "plane"
+                : nextCity && city.region === "Hokkaido"
+                  ? "plane"
+                  : "train";
             return (
               <Reveal key={`${stop.cityId}-${index}`} className="journey-card-wrap">
                 <article className="journey-card">
                   <div className="journey-card__media">
-                    <CityMedia city={city} sizes="(max-width: 720px) 88vw, (max-width: 1100px) 46vw, 24vw" />
+                    <CityMedia
+                      city={city}
+                      sizes="(max-width: 720px) 88vw, (max-width: 1100px) 46vw, 24vw"
+                    />
                     <div className="journey-card__number">0{index + 1}</div>
                     <div className="journey-card__shade" aria-hidden="true" />
-                    <p>{formatShortDate(stop.checkIn)} — {formatShortDate(stop.checkOut)}</p>
+                    <p>
+                      {formatShortDate(stop.checkIn)} — {formatShortDate(stop.checkOut)}
+                    </p>
                   </div>
                   <div className="journey-card__body">
                     <span className="journey-card__role">{stop.label}</span>
                     <h3>{city.name}</h3>
                     <p>{stop.note}</p>
-                    <div className="journey-card__nights"><strong>{stop.nights}</strong><span>{stop.nights === 1 ? "night" : "nights"}</span></div>
-                    <button type="button" onClick={() => openOnMap(city.id)}>See it on the map <Icon name="arrow-right" /></button>
+                    <div className="journey-card__nights">
+                      <strong>{stop.nights}</strong>
+                      <span>{stop.nights === 1 ? "night" : "nights"}</span>
+                    </div>
+                    <button type="button" onClick={() => openOnMap(city.id)}>
+                      See it on the map <Icon name="arrow-right" />
+                    </button>
                   </div>
                 </article>
                 {index < stops.length - 1 ? (
@@ -64,7 +90,9 @@ export function JourneyOverview() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
                     aria-hidden="true"
-                  ><Icon name={travelIcon} /></motion.div>
+                  >
+                    <Icon name={travelIcon} />
+                  </motion.div>
                 ) : null}
               </Reveal>
             );
